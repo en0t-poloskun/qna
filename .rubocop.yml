@@ -1,0 +1,14 @@
+Style/Documentation:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: true
+  Max: 9
+
+Metrics/MethodLength:
+  Enabled: true
+  Max: 13
+
+Metrics/PerceivedComplexity:
+  Enabled: true
+  Max: 9
