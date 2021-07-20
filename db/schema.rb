@@ -17,15 +17,19 @@ ActiveRecord::Schema.define(version: 20_210_720_101_201) do
   enable_extension 'plpgsql'
 
   create_table 'answers', force: :cascade do |t|
-    t.text 'body'
+    t.text 'body', null: false
+    t.bigint 'question_id', null: false
+    t.datetime 'created_at', precision: 6, null: false
+    t.datetime 'updated_at', precision: 6, null: false
+    t.index ['question_id'], name: 'index_answers_on_question_id'
+  end
+
+  create_table 'questions', force: :cascade do |t|
+    t.string 'title', null: false
+    t.text 'body', null: false
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
   end
 
-  create_table 'questions', force: :cascade do |t|
-    t.string 'title'
-    t.text 'body'
-    t.datetime 'created_at', precision: 6, null: false
-    t.datetime 'updated_at', precision: 6, null: false
-  end
+  add_foreign_key 'answers', 'questions'
 end
