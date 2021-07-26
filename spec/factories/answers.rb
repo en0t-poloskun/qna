@@ -3,6 +3,10 @@
 FactoryBot.define do
   factory :answer do
     body { 'MyText' }
-    question { create(:question) }
+    question { build(:question) }
+
+    trait :invalid do
+      body { nil }
+    end
   end
 end

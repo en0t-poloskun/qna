@@ -16,4 +16,4 @@ Metrics/PerceivedComplexity:
 Metrics/BlockLength:
   Enabled: true
   Exclude: 
-    - spec/controllers/questions_controller_spec.rb
+    - spec/controllers/*
