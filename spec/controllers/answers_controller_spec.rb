@@ -40,18 +40,13 @@ describe AnswersController, type: :controller do
     context 'with valid attributes' do
       let(:answer_params) { attributes_for(:answer) }
 
-      it 'saves a new answer in the database' do
-        expect { post_create }.to change(Answer, :count).by(1)
+      it 'saves a new answer for question in the database' do
+        expect { post_create }.to change(question.answers, :count).by(1)
       end
 
       it 'redirects to show view' do
         post_create
         expect(response).to redirect_to assigns(:answer)
-      end
-
-      it 'assigns new answer to question' do
-        post_create
-        expect(assigns(:answer).question).to eq question
       end
     end
 
