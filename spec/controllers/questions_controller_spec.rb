@@ -16,26 +16,30 @@ describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
+    let(:post_create) { post :create, params: { question: question_params } }
+
     context 'with valid attributes' do
+      let(:question_params) { attributes_for(:question) }
+
       it 'saves a new question in the database' do
-        expect { post :create, params: { question: attributes_for(:question) } }.to change(Question, :count).by(1)
+        expect { post_create }.to change(Question, :count).by(1)
       end
 
       it 'redirects to show view' do
-        post :create, params: { question: attributes_for(:question) }
+        post_create
         expect(response).to redirect_to assigns(:question)
       end
     end
 
     context 'with invalid attributes' do
+      let(:question_params) { attributes_for(:question, :invalid) }
+
       it 'does not save the question' do
-        expect do
-          post :create, params: { question: attributes_for(:question, :invalid) }
-        end.to_not change(Question, :count)
+        expect { post_create }.to_not change(Question, :count)
       end
 
       it 're-renders new view' do
-        post :create, params: { question: attributes_for(:question, :invalid) }
+        post_create
         expect(response).to render_template :new
       end
     end
