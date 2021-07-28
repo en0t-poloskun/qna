@@ -12,3 +12,8 @@ Metrics/MethodLength:
 Metrics/PerceivedComplexity:
   Enabled: true
   Max: 9
+
+Metrics/BlockLength:
+  Enabled: true
+  Exclude: 
+    - spec/controllers/*
