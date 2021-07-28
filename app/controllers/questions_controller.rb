@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class QuestionsController < ApplicationController
+  def index; end
+
   def show
     @question = Question.find(params[:id])
   end

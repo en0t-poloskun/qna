@@ -6,7 +6,7 @@ feature 'User can view a list of questions', "
   I'd like to be able to view a list of questions
 " do
   scenario 'User views all questions' do
-    2.times { create(:question) }
+    create_list(:question, 2)
 
     visit questions_path
 
