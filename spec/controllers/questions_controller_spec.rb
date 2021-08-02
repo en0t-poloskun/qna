@@ -2,6 +2,7 @@
 
 describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
+  let(:user) { create(:user) }
 
   describe 'GET #index' do
     let(:questions) { create_list(:question, 3) }
@@ -18,6 +19,8 @@ describe QuestionsController, type: :controller do
   end
 
   describe 'GET #new' do
+    before { login(user) }
+
     before { get :new }
 
     it 'assigns a new Question to @question' do
@@ -30,6 +33,8 @@ describe QuestionsController, type: :controller do
   end
 
   describe 'POST #create' do
+    before { login(user) }
+
     let(:post_create) { post :create, params: { question: question_params } }
 
     context 'with valid attributes' do
