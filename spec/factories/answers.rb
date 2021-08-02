@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :answer do
-    body { 'MyText' }
+    body { 'Answer body' }
     question { build(:question) }
 
     trait :invalid do

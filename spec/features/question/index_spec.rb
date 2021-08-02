@@ -11,7 +11,7 @@ feature 'User can view a list of questions', "
     visit questions_path
 
     expect(page).to have_content 'All Questions'
-    expect(page).to have_content 'MyString', count: 3
-    expect(page).to have_content 'MyText', count: 3
+    expect(page).to have_content 'Question title', count: 3
+    expect(page).to have_content 'Question body', count: 3
   end
 end
