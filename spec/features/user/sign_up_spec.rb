@@ -17,8 +17,6 @@ feature 'User can sign up', "
   end
 
   scenario 'sign up with errors' do
-    fill_in 'Password', with: '12345678'
-    fill_in 'Password confirmation', with: '12345678'
     click_button 'Sign up'
 
     expect(page).to have_content "Email can't be blank"
