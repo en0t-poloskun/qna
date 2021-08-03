@@ -17,7 +17,7 @@ feature 'User can create answer', "
 
     scenario 'adds an answer' do
       fill_in 'Body', with: 'text text text'
-      click_on 'Answer'
+      click_on 'Add'
 
       expect(page).to have_content 'Your answer successfully added.'
       expect(page).to have_content question.title
@@ -26,7 +26,7 @@ feature 'User can create answer', "
     end
 
     scenario 'adds an answer with errors' do
-      click_on 'Answer'
+      click_on 'Add'
 
       expect(page).to have_content "Body can't be blank"
     end
@@ -34,7 +34,7 @@ feature 'User can create answer', "
 
   scenario 'Unauthenticated user tries to add an answer' do
     visit question_path(question)
-    click_on 'Answer'
+    click_on 'Add'
 
     expect(page).to have_content 'You need to sign in or sign up before continuing.'
   end

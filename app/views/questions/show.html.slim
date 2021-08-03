@@ -3,4 +3,8 @@ p= @question.body
 
 = render @question.answers
 
+h3= 'Add answer'
+
+= render 'answers/form'
+
 = link_to 'Back', questions_path
