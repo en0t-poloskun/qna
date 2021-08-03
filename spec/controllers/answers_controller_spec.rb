@@ -49,6 +49,11 @@ describe AnswersController, type: :controller do
         expect { post_create }.to change(question.answers, :count).by(1)
       end
 
+      it 'assigned to author' do
+        post_create
+        expect(assigns(:answer).author).to eq user
+      end
+
       it 'redirects to question show view' do
         post_create
         expect(response).to redirect_to assigns(:answer).question
@@ -66,6 +71,38 @@ describe AnswersController, type: :controller do
         post_create
         expect(response).to render_template 'questions/show'
       end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    before { login(user) }
+
+    let(:delete_request) { delete :destroy, params: { id: answer } }
+
+    context 'when user is an author' do
+      let!(:answer) { create(:answer, author: user) }
+
+      it 'deletes the answer' do
+        expect { delete_request }.to change(user.answers, :count).by(-1)
+      end
+
+      it "redirects to answer's question show" do
+        delete_request
+        expect(response).to redirect_to question_path(answer.question)
+      end
+    end
+
+    context 'when user is not an author' do
+      let!(:answer) { create(:answer) }
+
+      it 'does not delete the question' do
+        expect { delete_request }.to_not change(Answer, :count)
+      end
+    end
+
+    it "redirects to answer's question show" do
+      delete_request
+      expect(response).to redirect_to question_path(answer.question)
     end
   end
 end

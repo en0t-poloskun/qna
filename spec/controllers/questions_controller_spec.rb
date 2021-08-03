@@ -89,7 +89,6 @@ describe QuestionsController, type: :controller do
       let!(:question) { create(:question, author: user) }
 
       it 'deletes the question' do
-        question.author = user
         expect { delete_request }.to change(user.questions, :count).by(-1)
       end
 

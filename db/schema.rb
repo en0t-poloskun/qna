@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(version: 20_210_803_112_458) do
     t.bigint 'question_id', null: false
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
+    t.bigint 'author_id', null: false
+    t.index ['author_id'], name: 'index_answers_on_author_id'
     t.index ['question_id'], name: 'index_answers_on_question_id'
   end
 
@@ -46,5 +48,6 @@ ActiveRecord::Schema.define(version: 20_210_803_112_458) do
   end
 
   add_foreign_key 'answers', 'questions'
+  add_foreign_key 'answers', 'users', column: 'author_id'
   add_foreign_key 'questions', 'users', column: 'author_id'
 end

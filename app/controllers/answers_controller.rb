@@ -14,12 +14,25 @@ class AnswersController < ApplicationController
 
   def create
     @answer = @question.answers.build(answer_params)
+    @answer.author = current_user
 
     if @answer.save
       redirect_to @answer.question, notice: 'Your answer successfully added.'
     else
       render 'questions/show'
     end
+  end
+
+  def destroy
+    @answer = Answer.find(params[:id])
+
+    if current_user == @answer.author
+      @answer.destroy
+      flash[:notice] = 'Your answer successfully deleted.'
+    else
+      flash[:alert] = "You can't delete answers from other users."
+    end
+    redirect_to question_path(@answer.question)
   end
 
   private

@@ -1,1 +1,10 @@
-p= answer.body
+-if answer.persisted?
+  .card
+    .card-body
+      p= answer.body
+      - if answer.author == current_user
+        = link_to 'Delete Answer',
+                      answer_path(answer),
+                      method: :delete,
+                      data: { confirm: 'Are you sure?' }
+  br
