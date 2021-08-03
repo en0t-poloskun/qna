@@ -41,7 +41,7 @@ describe QuestionsController, type: :controller do
       let(:question_params) { attributes_for(:question) }
 
       it 'saves a new question in the database' do
-        expect { post_create }.to change(Question, :count).by(1)
+        expect { post_create }.to change(user.questions, :count).by(1)
       end
 
       it 'redirects to show view' do
@@ -77,6 +77,39 @@ describe QuestionsController, type: :controller do
 
     it 'renders show view' do
       expect(response).to render_template :show
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    before { login(user) }
+
+    let(:delete_request) { delete :destroy, params: { id: question } }
+
+    context 'when user is an author' do
+      let!(:question) { create(:question, author: user) }
+
+      it 'deletes the question' do
+        question.author = user
+        expect { delete_request }.to change(user.questions, :count).by(-1)
+      end
+
+      it 'redirects to index' do
+        delete_request
+        expect(response).to redirect_to questions_path
+      end
+    end
+
+    context 'when user is not an author' do
+      let!(:question) { create(:question) }
+
+      it 'does not delete the question' do
+        expect { delete_request }.to_not change(Question, :count)
+      end
+
+      it 'redirects to show' do
+        delete_request
+        expect(response).to redirect_to question_path(question)
+      end
     end
   end
 end
