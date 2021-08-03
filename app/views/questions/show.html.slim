@@ -1,4 +1,5 @@
 h1= @question.title
+b= "#{@question.author.email} asks:"
 p= @question.body
 - if @question.author == current_user
   = link_to 'Delete Question',

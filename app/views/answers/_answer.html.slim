@@ -1,6 +1,7 @@
 -if answer.persisted?
   .card
     .card-body
+      b= "#{answer.author.email} answers:"
       p= answer.body
       - if answer.author == current_user
         = link_to 'Delete Answer',
