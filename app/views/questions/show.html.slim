@@ -1,7 +1,7 @@
 h1= @question.title
 b= "#{@question.author.email} asks:"
 p= @question.body
-- if @question.author == current_user
+- if current_user&.author_of?(@question)
   = link_to 'Delete Question',
                 question_path(@question),
                 method: :delete,
