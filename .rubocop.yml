@@ -17,5 +17,6 @@ Metrics/BlockLength:
   Enabled: true
   Exclude: 
     - spec/controllers/*
+    - spec/features/answer/*
     - config/environments/*
     - db/schema.rb
