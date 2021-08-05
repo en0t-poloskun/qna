@@ -1,0 +1,6 @@
+.card
+  .card-body
+    h3= link_to question.title, question_path(question)
+    b= "#{question.author.email} asks:"
+    p= question.body
+br

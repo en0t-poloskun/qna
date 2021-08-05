@@ -1,0 +1,9 @@
+nav class="nav justify-content-end"
+  - if user_signed_in?
+    .nav-link
+      = link_to 'Sign out', destroy_user_session_path, method: :delete
+  - else
+    .nav-link
+      = link_to 'Sign in', new_user_session_path
+    .nav-link
+      = link_to 'Sign up', new_user_registration_path

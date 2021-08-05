@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe Question, type: :model do
+  it { should belong_to(:author).class_name('User') }
+
   it { should have_many(:answers).dependent(:destroy) }
 
   it { should validate_presence_of :title }
