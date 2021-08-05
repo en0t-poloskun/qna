@@ -40,7 +40,7 @@ describe AnswersController, type: :controller do
   describe 'POST #create' do
     before { login(user) }
 
-    let(:post_create) { post :create, params: { question_id: question, answer: answer_params } }
+    let(:post_create) { post :create, params: { question_id: question, answer: answer_params }, format: :js }
 
     context 'with valid attributes' do
       let(:answer_params) { attributes_for(:answer) }
@@ -54,9 +54,9 @@ describe AnswersController, type: :controller do
         expect(assigns(:answer).author).to eq user
       end
 
-      it 'redirects to question show view' do
+      it 'renders question show template' do
         post_create
-        expect(response).to redirect_to assigns(:answer).question
+        expect(response).to render_template :create
       end
     end
 
@@ -67,9 +67,9 @@ describe AnswersController, type: :controller do
         expect { post_create }.to_not change(Answer, :count)
       end
 
-      it 're-renders question show view' do
+      it 'renders question show template' do
         post_create
-        expect(response).to render_template 'questions/show'
+        expect(response).to render_template :create
       end
     end
   end

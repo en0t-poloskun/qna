@@ -14,12 +14,7 @@ class AnswersController < ApplicationController
   def create
     @answer = @question.answers.build(answer_params)
     @answer.author = current_user
-
-    if @answer.save
-      redirect_to @answer.question, notice: 'Your answer successfully added.'
-    else
-      render 'questions/show'
-    end
+    @answer.save
   end
 
   def destroy

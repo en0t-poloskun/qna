@@ -19,7 +19,6 @@ feature 'User can create answer', "
       fill_in 'Body', with: 'text text text'
       click_on 'Add'
 
-      expect(page).to have_content 'Your answer successfully added.'
       expect(current_path).to eq question_path(question)
 
       within '.answers' do
