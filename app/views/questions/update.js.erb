@@ -1,0 +1,6 @@
+$('*[data-question_id="<%= @question.id %>"]').find('.edit-question-errors')
+                                          .html('<%= render 'shared/errors', resource: @question %>');
+
+<% unless @question.errors.present? %>
+  $('*[data-question_id="<%= @question.id %>"]').replaceWith('<%= j render @question %>');
+<% end %>

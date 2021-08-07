@@ -16,8 +16,8 @@ feature 'Author can delete his question', "
     scenario 'deletes his question' do
       user.questions.push(question)
 
-      visit question_path(question)
-      click_on 'Delete Question'
+      visit questions_path
+      click_on 'Delete'
 
       expect(page).to have_content 'Your question successfully deleted.'
       expect(page).not_to have_content question.title
@@ -25,15 +25,15 @@ feature 'Author can delete his question', "
     end
 
     scenario "tries to delete someone else's question" do
-      visit question_path(question)
+      visit questions_path
 
-      expect(page).not_to have_link 'Delete Question'
+      expect(page).not_to have_link 'Delete'
     end
   end
 
   scenario 'Unauthenticated user tries to delete question' do
-    visit question_path(question)
+    visit questions_path
 
-    expect(page).not_to have_link 'Delete Question'
+    expect(page).not_to have_link 'Delete'
   end
 end

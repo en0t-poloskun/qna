@@ -111,4 +111,59 @@ describe QuestionsController, type: :controller do
       end
     end
   end
+
+  describe 'PATCH #update' do
+    before { login(user) }
+
+    let(:patch_update) { patch :update, params: { id: question, question: question_params }, format: :js }
+
+    context 'when user is an author' do
+      let!(:question) { create(:question, author: user) }
+
+      context 'with valid attributes' do
+        let(:question_params) { { title: 'new title', body: 'new body' } }
+
+        it 'changes question attributes' do
+          patch_update
+          question.reload
+          expect(question.title).to eq 'new title'
+          expect(question.body).to eq 'new body'
+        end
+
+        it 'renders update view' do
+          patch_update
+          expect(response).to render_template :update
+        end
+      end
+
+      context 'with invalid attributes' do
+        let(:question_params) { attributes_for(:question, :invalid) }
+
+        it 'does not change answer attributes' do
+          expect { patch_update }.to_not change(question, :title)
+          expect { patch_update }.to_not change(question, :body)
+        end
+
+        it 'renders update view' do
+          patch_update
+          expect(response).to render_template :update
+        end
+      end
+    end
+
+    context 'when user is not an author' do
+      let!(:question) { create(:question) }
+      let(:question_params) { { title: 'new title', body: 'new body' } }
+
+      it 'does not change question attributes' do
+        expect { patch_update }.to_not change(question, :title)
+        expect { patch_update }.to_not change(question, :body)
+      end
+
+      it 'renders update view' do
+        patch_update
+        expect(response).to render_template :update
+      end
+    end
+  end
 end
