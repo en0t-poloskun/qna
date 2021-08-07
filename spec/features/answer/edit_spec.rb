@@ -9,12 +9,12 @@ feature 'User can edit his answer', "
   given!(:question) { create(:question) }
   given!(:answer) { create(:answer, question: question) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background do
       sign_in(user)
     end
 
-    scenario 'edits his answer', js: true do
+    scenario 'edits his answer' do
       user.answers.push(answer)
 
       visit question_path(question)
@@ -39,6 +39,7 @@ feature 'User can edit his answer', "
       click_on 'Edit'
 
       within '.answers' do
+        fill_in 'Your answer', with: ''
         click_on 'Save'
 
         expect(page).to have_content "Body can't be blank"
@@ -53,7 +54,7 @@ feature 'User can edit his answer', "
     end
   end
 
-  scenario 'Unauthenticated can not edit answer' do
+  scenario 'Unauthenticated user tries to edit answer' do
     visit question_path(question)
 
     expect(page).to_not have_link 'Edit'

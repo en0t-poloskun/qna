@@ -1,20 +1,19 @@
 # frozen_string_literal: true
 
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: :show
-  before_action :find_question, only: %i[new create]
-  before_action :find_answer, only: %i[show destroy]
-
-  def show; end
-
-  def new
-    @answer = Answer.new
-  end
+  before_action :authenticate_user!
+  before_action :find_answer, only: %i[destroy update]
 
   def create
+    @question = Question.find(params[:question_id])
     @answer = @question.answers.build(answer_params)
     @answer.author = current_user
     @answer.save
+  end
+
+  def update
+    @answer.update(answer_params) if current_user.author_of?(@answer)
+    @question = @answer.question
   end
 
   def destroy
@@ -28,10 +27,6 @@ class AnswersController < ApplicationController
   end
 
   private
-
-  def find_question
-    @question = Question.find(params[:question_id])
-  end
 
   def find_answer
     @answer = Answer.find(params[:id])

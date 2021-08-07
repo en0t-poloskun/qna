@@ -3,39 +3,9 @@
 require 'rails_helper'
 
 describe AnswersController, type: :controller do
-  let(:answer) { create(:answer) }
-  let(:question) { create(:question) }
   let(:user) { create(:user) }
-
-  describe 'GET #show' do
-    before { get :show, params: { id: answer } }
-
-    it 'assigns the requested answer to @answer' do
-      expect(assigns(:answer)).to eq answer
-    end
-
-    it 'renders show view' do
-      expect(response).to render_template :show
-    end
-  end
-
-  describe 'GET #new' do
-    before { login(user) }
-
-    before { get :new, params: { question_id: question } }
-
-    it 'assigns the requested question to @question' do
-      expect(assigns(:question)).to eq question
-    end
-
-    it 'assigns a new Answer to @answer' do
-      expect(assigns(:answer)).to be_a_new(Answer)
-    end
-
-    it 'renders new view' do
-      expect(response).to render_template :new
-    end
-  end
+  let(:question) { create(:question) }
+  let(:answer) { create(:answer, question: question) }
 
   describe 'POST #create' do
     before { login(user) }
@@ -103,6 +73,58 @@ describe AnswersController, type: :controller do
     it "redirects to answer's question show" do
       delete_request
       expect(response).to redirect_to question_path(answer.question)
+    end
+  end
+
+  describe 'PATCH #update' do
+    before { login(user) }
+
+    let(:patch_update) { patch :update, params: { id: answer, answer: answer_params }, format: :js }
+
+    context 'when user is an author' do
+      let!(:answer) { create(:answer, author: user) }
+
+      context 'with valid attributes' do
+        let(:answer_params) { { body: 'new body' } }
+
+        it 'changes answer attributes' do
+          patch_update
+          answer.reload
+          expect(answer.body).to eq 'new body'
+        end
+
+        it 'renders update view' do
+          patch_update
+          expect(response).to render_template :update
+        end
+      end
+
+      context 'with invalid attributes' do
+        let(:answer_params) { attributes_for(:answer, :invalid) }
+
+        it 'does not change answer attributes' do
+          expect { patch_update }.to_not change(answer, :body)
+        end
+
+        it 'renders update view' do
+          patch_update
+          expect(response).to render_template :update
+        end
+      end
+    end
+
+    context 'when user is not an author' do
+      let!(:answer) { create(:answer) }
+      let(:answer_params) { { body: 'new body' } }
+
+      it 'does not change answer attributes' do
+        expect { patch_update }.to_not change(answer, :body)
+      end
+
+      it 'renders update view' do
+        patch_update
+        expect(response).to render_template :update
+      end
     end
   end
 end

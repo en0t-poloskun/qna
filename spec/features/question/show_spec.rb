@@ -5,7 +5,7 @@ feature 'User can view the question and the answers to it', "
   As an user
   I'd like to be able to view the question with available answers
 " do
-  scenario 'view the question with available answers' do
+  scenario 'view the question with available answers', js: true do
     question = create(:question)
     question.answers = create_list(:answer, 3)
 
