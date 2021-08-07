@@ -9,6 +9,7 @@
         = link_to 'Delete',
                       answer_path(answer),
                       method: :delete,
+                      remote: true,
                       data: { confirm: 'Are you sure?' }
 
       .edit-answer-errors

@@ -47,7 +47,7 @@ describe AnswersController, type: :controller do
   describe 'DELETE #destroy' do
     before { login(user) }
 
-    let(:delete_request) { delete :destroy, params: { id: answer } }
+    let(:delete_request) { delete :destroy, params: { id: answer }, format: :js }
 
     context 'when user is an author' do
       let!(:answer) { create(:answer, author: user) }
@@ -56,23 +56,23 @@ describe AnswersController, type: :controller do
         expect { delete_request }.to change(user.answers, :count).by(-1)
       end
 
-      it "redirects to answer's question show" do
+      it 'renders destroy view' do
         delete_request
-        expect(response).to redirect_to question_path(answer.question)
+        expect(response).to render_template :destroy
       end
     end
 
     context 'when user is not an author' do
       let!(:answer) { create(:answer) }
 
-      it 'does not delete the question' do
+      it 'does not delete the answer' do
         expect { delete_request }.to_not change(Answer, :count)
       end
-    end
 
-    it "redirects to answer's question show" do
-      delete_request
-      expect(response).to redirect_to question_path(answer.question)
+      it 'renders destroy view' do
+        delete_request
+        expect(response).to render_template :destroy
+      end
     end
   end
 
