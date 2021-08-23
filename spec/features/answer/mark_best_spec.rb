@@ -24,7 +24,25 @@ feature 'Author of the question can choose the best answer', "
       end
 
       within '.answers', match: :first do
-        expect(page).to have_content 'Best answer'
+        expect(page).to have_content 'Best answer!'
+        expect(page).to have_content answers.second.body
+      end
+    end
+
+    scenario 'chooses another best answer for his question' do
+      user.questions.push(question)
+      question.answers.push(create(:answer, best: true))
+
+      visit question_path(question)
+
+      within ".answer[data-answer_id=\"#{answers.second.id}\"]" do
+        click_on 'Mark as best'
+      end
+
+      expect(page).to have_content 'Best answer!', count: 1
+
+      within '.answers', match: :first do
+        expect(page).to have_content 'Best answer!'
         expect(page).to have_content answers.second.body
       end
     end
