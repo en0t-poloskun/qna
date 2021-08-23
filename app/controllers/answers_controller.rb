@@ -21,7 +21,8 @@ class AnswersController < ApplicationController
   end
 
   def mark_best
-    @answer.update(best: true) if current_user.author_of?(@answer.question)
+    @question = @answer.question
+    @question.change_best(@answer) if current_user.author_of?(@question)
   end
 
   private

@@ -7,4 +7,45 @@ describe Question, type: :model do
 
   it { should validate_presence_of :title }
   it { should validate_presence_of :body }
+
+  describe 'Question #best_answer' do
+    let(:question) { create(:question) }
+    let(:answer) { create(:answer, question: question) }
+
+    it 'returns the best answer if it exists' do
+      best_answer = create(:answer, question: question, best: true)
+      expect(question.best_answer).to eq best_answer
+    end
+
+    it 'returns nil if there is no best answer' do
+      expect(question.best_answer).to eq nil
+    end
+  end
+
+  describe 'Question #change_answer' do
+    let(:question) { create(:question) }
+    let(:new_best_answer) { create(:answer, question: question) }
+
+    context 'when question have the best answer' do
+      let!(:old_best_answer) { create(:answer, question: question, best: true) }
+
+      it "changes old best answer's attribute to false" do
+        question.change_best(new_best_answer)
+        old_best_answer.reload
+        expect(old_best_answer.best).to eq false
+      end
+
+      it "changes new best answer's attribute to true" do
+        question.change_best(new_best_answer)
+        expect(new_best_answer.best).to eq true
+      end
+    end
+
+    context 'when question have not the best answer' do
+      it "changes new best answer's attribute to true" do
+        question.change_best(new_best_answer)
+        expect(new_best_answer.best).to eq true
+      end
+    end
+  end
 end

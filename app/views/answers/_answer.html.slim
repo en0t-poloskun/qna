@@ -8,7 +8,7 @@
       b= "#{answer.author.email} answers:"
       p= answer.body
 
-      - if current_user&.author_of?(answer.question)
+      - if current_user&.author_of?(answer.question) && !answer.best
         p= link_to 'Mark as best',
                       mark_best_answer_path(answer),
                       method: :patch,

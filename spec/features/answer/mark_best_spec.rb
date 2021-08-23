@@ -23,9 +23,10 @@ feature 'Author of the question can choose the best answer', "
         click_on 'Mark as best'
       end
 
-      within '.answers', match: :first do
+      within '.answer', match: :first do
         expect(page).to have_content 'Best answer!'
         expect(page).to have_content answers.second.body
+        expect(page).not_to have_content 'Mark as best'
       end
     end
 
@@ -41,9 +42,10 @@ feature 'Author of the question can choose the best answer', "
 
       expect(page).to have_content 'Best answer!', count: 1
 
-      within '.answers', match: :first do
+      within '.answer', match: :first do
         expect(page).to have_content 'Best answer!'
         expect(page).to have_content answers.second.body
+        expect(page).not_to have_content 'Mark as best'
       end
     end
 
