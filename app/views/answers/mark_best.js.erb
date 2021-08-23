@@ -1,0 +1,2 @@
+$('*[data-answer_id="<%= @answer.id %>"]').remove();
+$('.answers').prepend('<%= j render @answer %>');

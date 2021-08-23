@@ -1,8 +1,19 @@
 .answer*{data: { answer_id: answer.id } }
   .card
     .card-body
+      - if answer.best
+        b= 'Best answer!'
+        br
+
       b= "#{answer.author.email} answers:"
       p= answer.body
+
+      - if current_user&.author_of?(answer.question)
+        p= link_to 'Mark as best',
+                      mark_best_answer_path(answer),
+                      method: :patch,
+                      remote: true
+
       - if current_user&.author_of?(answer)
         = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
         = ' | '

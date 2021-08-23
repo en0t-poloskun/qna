@@ -56,7 +56,7 @@ describe AnswersController, type: :controller do
         expect { delete_request }.to change(user.answers, :count).by(-1)
       end
 
-      it 'renders destroy view' do
+      it 'renders destroy template' do
         delete_request
         expect(response).to render_template :destroy
       end
@@ -69,7 +69,7 @@ describe AnswersController, type: :controller do
         expect { delete_request }.to_not change(Answer, :count)
       end
 
-      it 'renders destroy view' do
+      it 'renders destroy template' do
         delete_request
         expect(response).to render_template :destroy
       end
@@ -93,7 +93,7 @@ describe AnswersController, type: :controller do
           expect(answer.body).to eq 'new body'
         end
 
-        it 'renders update view' do
+        it 'renders update template' do
           patch_update
           expect(response).to render_template :update
         end
@@ -106,7 +106,7 @@ describe AnswersController, type: :controller do
           expect { patch_update }.to_not change(answer, :body)
         end
 
-        it 'renders update view' do
+        it 'renders update template' do
           patch_update
           expect(response).to render_template :update
         end
@@ -121,9 +121,43 @@ describe AnswersController, type: :controller do
         expect { patch_update }.to_not change(answer, :body)
       end
 
-      it 'renders update view' do
+      it 'renders update template' do
         patch_update
         expect(response).to render_template :update
+      end
+    end
+  end
+
+  describe 'PATCH #mark_best' do
+    before { login(user) }
+
+    let(:patch_mark_best) { patch :mark_best, params: { id: answer }, format: :js }
+
+    context 'when user is author of question' do
+      let!(:question) { create(:question, author: user) }
+
+      it "changes answer's best attribute" do
+        patch_mark_best
+        answer.reload
+        expect(answer.best).to eq true
+      end
+
+      it 'renders mark_best template' do
+        patch_mark_best
+        expect(response).to render_template :mark_best
+      end
+    end
+
+    context 'when user is not an author' do
+      let!(:question) { create(:question) }
+
+      it "does not change answer's best attribute" do
+        expect { patch_mark_best }.to_not change(answer, :best)
+      end
+
+      it 'renders mark_best template' do
+        patch_mark_best
+        expect(response).to render_template :mark_best
       end
     end
   end

@@ -19,9 +19,11 @@ feature 'Author of the question can choose the best answer', "
 
       visit question_path(question)
 
-      within find(".answer[data-answer_id=\"#{answers.second.id}\"]") { click_on 'Mark as best' }
+      within ".answer[data-answer_id=\"#{answers.second.id}\"]" do
+        click_on 'Mark as best'
+      end
 
-      within first('.answers') do
+      within '.answers', match: :first do
         expect(page).to have_content 'Best answer'
         expect(page).to have_content answers.second.body
       end
