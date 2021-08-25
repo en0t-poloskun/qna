@@ -13,7 +13,9 @@ class Question < ApplicationRecord
   end
 
   def change_best(answer)
-    best_answer&.update(best: false)
-    answer.update(best: true)
+    transaction do
+      best_answer&.update(best: false)
+      answer.update(best: true)
+    end
   end
 end

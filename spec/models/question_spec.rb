@@ -8,7 +8,7 @@ describe Question, type: :model do
   it { should validate_presence_of :title }
   it { should validate_presence_of :body }
 
-  describe 'Question #best_answer' do
+  describe 'Question #change_best' do
     let(:question) { create(:question) }
     let(:answer) { create(:answer, question: question) }
 
