@@ -168,7 +168,7 @@ describe AnswersController, type: :controller do
 
       it 'renders mark_best template' do
         patch_mark_best
-        
+
         expect(response).to render_template :mark_best
       end
     end

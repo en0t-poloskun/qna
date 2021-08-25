@@ -7,16 +7,18 @@ describe User, type: :model do
   end
 
   describe '#author_of?' do
-    let(:user) { create(:user) }
+    subject(:user) { create(:user) }
 
-    it 'returns true if user is the author of resource' do
-      question = create(:question, author: user)
-      expect(user.author_of?(question)).to eq true
+    context 'when user is the author' do
+      let(:question) { create(:question, author: user) }
+
+      it { is_expected.to be_author_of(question) }
     end
 
-    it 'returns false if user is not the author of resource' do
-      question = create(:question)
-      expect(user.author_of?(question)).to eq false
+    context 'when user is not the author' do
+      let(:question) { create(:question) }
+
+      it { is_expected.not_to be_author_of(question) }
     end
   end
 end

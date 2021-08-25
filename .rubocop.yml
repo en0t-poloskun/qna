@@ -27,6 +27,9 @@ Metrics/BlockLength:
 RSpec/Capybara/FeatureMethods:
   Enabled: false
 
+RSpec/MultipleExpectations:
+  Enabled: false
+
 RSpec/NestedGroups:
   Enabled: true
   Max: 4

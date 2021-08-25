@@ -153,7 +153,7 @@ describe QuestionsController, type: :controller do
 
         it 'renders update view' do
           patch_update
-          
+
           expect(response).to render_template :update
         end
       end
