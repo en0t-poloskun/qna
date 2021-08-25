@@ -1,14 +1,22 @@
+require: rubocop-rspec
+
 Style/Documentation:
   Enabled: false
 
 Metrics/CyclomaticComplexity:
   Enabled: true
   Max: 9
-require: rubocop-rspec
+
+Metrics/AbcSize:
+  Enabled: true
+  Exclude:
+    - db/migrate/*
 
 Metrics/MethodLength:
   Enabled: true
   Max: 13
+  Exclude:
+    - db/migrate/*
 
 Metrics/PerceivedComplexity:
   Enabled: true
