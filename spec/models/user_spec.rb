@@ -2,11 +2,11 @@
 
 describe User, type: :model do
   describe 'Associations' do
-    it { should have_many(:questions).dependent(:destroy) }
-    it { should have_many(:answers).dependent(:destroy) }
+    it { is_expected.to have_many(:questions).dependent(:destroy) }
+    it { is_expected.to have_many(:answers).dependent(:destroy) }
   end
 
-  describe 'User #author_of?' do
+  describe '#author_of?' do
     let(:user) { create(:user) }
 
     it 'returns true if user is the author of resource' do

@@ -4,6 +4,7 @@ Style/Documentation:
 Metrics/CyclomaticComplexity:
   Enabled: true
   Max: 9
+require: rubocop-rspec
 
 Metrics/MethodLength:
   Enabled: true
@@ -22,3 +23,14 @@ Metrics/BlockLength:
     - spec/features/question/*
     - config/environments/*
     - db/schema.rb
+
+RSpec/Capybara/FeatureMethods:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: true
+  Max: 4
+
+RSpec/ExampleLength:
+  Enabled: true
+  Max: 15

@@ -9,7 +9,7 @@ feature 'Author of the question can choose the best answer', "
   given!(:question) { create(:question) }
   given!(:answers) { create_list(:answer, 3, question: question) }
 
-  describe 'Authenticated user', js: true do
+  describe 'authenticated user', js: true do
     background do
       sign_in(user)
     end
@@ -56,7 +56,7 @@ feature 'Author of the question can choose the best answer', "
     end
   end
 
-  scenario 'Unauthenticated user tries to mark the best answer' do
+  scenario 'unauthenticated user tries to mark the best answer' do
     visit question_path(question)
 
     expect(page).not_to have_link 'Mark as best'

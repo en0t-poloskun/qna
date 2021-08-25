@@ -8,7 +8,7 @@ feature 'Author can delete his question', "
   given(:user) { create(:user) }
   given(:question) { create(:question) }
 
-  describe 'Authenticated user' do
+  describe 'authenticated user' do
     background do
       sign_in(user)
     end
@@ -31,7 +31,7 @@ feature 'Author can delete his question', "
     end
   end
 
-  scenario 'Unauthenticated user tries to delete question' do
+  scenario 'unauthenticated user tries to delete question' do
     visit questions_path
 
     expect(page).not_to have_link 'Delete'

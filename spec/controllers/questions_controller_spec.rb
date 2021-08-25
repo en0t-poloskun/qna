@@ -19,9 +19,10 @@ describe QuestionsController, type: :controller do
   end
 
   describe 'GET #new' do
-    before { login(user) }
-
-    before { get :new }
+    before do
+      login(user)
+      get :new
+    end
 
     it 'assigns a new Question to @question' do
       expect(assigns(:question)).to be_a_new(Question)
@@ -46,6 +47,7 @@ describe QuestionsController, type: :controller do
 
       it 'redirects to show view' do
         post_create
+
         expect(response).to redirect_to assigns(:question)
       end
     end
@@ -54,11 +56,12 @@ describe QuestionsController, type: :controller do
       let(:question_params) { attributes_for(:question, :invalid) }
 
       it 'does not save the question' do
-        expect { post_create }.to_not change(Question, :count)
+        expect { post_create }.not_to change(Question, :count)
       end
 
       it 're-renders new view' do
         post_create
+
         expect(response).to render_template :new
       end
     end
@@ -83,10 +86,9 @@ describe QuestionsController, type: :controller do
   describe 'DELETE #destroy' do
     before { login(user) }
 
-    let(:delete_request) { delete :destroy, params: { id: question } }
-
     context 'when user is an author' do
       let!(:question) { create(:question, author: user) }
+      let(:delete_request) { delete :destroy, params: { id: question } }
 
       it 'deletes the question' do
         expect { delete_request }.to change(user.questions, :count).by(-1)
@@ -94,19 +96,22 @@ describe QuestionsController, type: :controller do
 
       it 'redirects to index' do
         delete_request
+
         expect(response).to redirect_to questions_path
       end
     end
 
     context 'when user is not an author' do
       let!(:question) { create(:question) }
+      let(:delete_request) { delete :destroy, params: { id: question } }
 
       it 'does not delete the question' do
-        expect { delete_request }.to_not change(Question, :count)
+        expect { delete_request }.not_to change(Question, :count)
       end
 
       it 'redirects to show' do
         delete_request
+
         expect(response).to redirect_to question_path(question)
       end
     end
@@ -126,12 +131,14 @@ describe QuestionsController, type: :controller do
         it 'changes question attributes' do
           patch_update
           question.reload
+
           expect(question.title).to eq 'new title'
           expect(question.body).to eq 'new body'
         end
 
         it 'renders update view' do
           patch_update
+
           expect(response).to render_template :update
         end
       end
@@ -140,12 +147,13 @@ describe QuestionsController, type: :controller do
         let(:question_params) { attributes_for(:question, :invalid) }
 
         it 'does not change answer attributes' do
-          expect { patch_update }.to_not change(question, :title)
-          expect { patch_update }.to_not change(question, :body)
+          expect { patch_update }.not_to change(question, :title)
+          expect { patch_update }.not_to change(question, :body)
         end
 
         it 'renders update view' do
           patch_update
+          
           expect(response).to render_template :update
         end
       end
@@ -156,8 +164,8 @@ describe QuestionsController, type: :controller do
       let(:question_params) { { title: 'new title', body: 'new body' } }
 
       it 'does not change question attributes' do
-        expect { patch_update }.to_not change(question, :title)
-        expect { patch_update }.to_not change(question, :body)
+        expect { patch_update }.not_to change(question, :title)
+        expect { patch_update }.not_to change(question, :body)
       end
 
       it 'renders update view' do

@@ -7,7 +7,7 @@ feature 'User can create question', "
 " do
   given(:user) { create(:user) }
 
-  describe 'Authenticated user' do
+  describe 'authenticated user' do
     background do
       sign_in(user)
 
@@ -32,7 +32,7 @@ feature 'User can create question', "
     end
   end
 
-  scenario 'Unauthenticated user tries to ask a question' do
+  scenario 'unauthenticated user tries to ask a question' do
     visit questions_path
     click_on 'Ask question'
 

@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 describe Question, type: :model do
-  it { should belong_to(:author).class_name('User') }
+  it { is_expected.to belong_to(:author).class_name('User') }
 
-  it { should have_many(:answers).dependent(:destroy) }
+  it { is_expected.to have_many(:answers).dependent(:destroy) }
 
-  it { should validate_presence_of :title }
-  it { should validate_presence_of :body }
+  it { is_expected.to validate_presence_of :title }
+  it { is_expected.to validate_presence_of :body }
 
-  describe 'Question #change_best' do
+  describe '#best_answer' do
     let(:question) { create(:question) }
     let(:answer) { create(:answer, question: question) }
 
@@ -22,7 +22,7 @@ describe Question, type: :model do
     end
   end
 
-  describe 'Question #change_answer' do
+  describe '#change_best' do
     let(:question) { create(:question) }
     let(:new_best_answer) { create(:answer, question: question) }
 
