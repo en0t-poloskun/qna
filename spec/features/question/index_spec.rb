@@ -5,7 +5,7 @@ feature 'User can view a list of questions', "
   As an user
   I'd like to be able to view a list of questions
 " do
-  scenario 'User views all questions' do
+  scenario 'User views all questions', js: true do
     create_list(:question, 3)
 
     visit questions_path

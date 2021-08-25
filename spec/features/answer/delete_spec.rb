@@ -14,26 +14,25 @@ feature 'Author can delete his answer', "
       sign_in(user)
     end
 
-    scenario 'deletes his question' do
+    scenario 'deletes his answer', js: true do
       user.answers.push(answer)
 
       visit question_path(question)
-      click_on 'Delete Answer'
+      page.accept_confirm { click_link 'Delete' }
 
-      expect(page).to have_content 'Your answer successfully deleted.'
       expect(page).not_to have_content answer.body
     end
 
     scenario "tries to delete someone else's answer" do
       visit question_path(question)
 
-      expect(page).not_to have_link 'Delete Answer'
+      expect(page).not_to have_link 'Delete'
     end
   end
 
   scenario 'Unauthenticated user tries to delete answer' do
     visit question_path(question)
 
-    expect(page).not_to have_link 'Delete Answer'
+    expect(page).not_to have_link 'Delete'
   end
 end

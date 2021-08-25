@@ -1,6 +1,28 @@
-.card
-  .card-body
-    h3= link_to question.title, question_path(question)
-    b= "#{question.author.email} asks:"
-    p= question.body
-br
+.question*{data: { question_id: question.id } }
+  .card
+    .card-body
+      h3= link_to question.title, question_path(question)
+      b= "#{question.author.email} asks:"
+      p= question.body
+      - if current_user&.author_of?(question)
+        = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
+        = ' | '
+        = link_to 'Delete',
+                      question_path(question),
+                      method: :delete,
+                      data: { confirm: 'Are you sure?' }
+
+      .edit-question-errors
+        = render 'shared/errors', resource: question
+        
+      = form_with model: question, class: 'd-none', html: { id: "edit-question-#{question.id}" }, local: false do |f|
+        .form-group
+          = f.label :title, 'Title:'
+          .form-text
+            = f.text_field :title
+        .form-group
+          = f.label :body, 'Body:'
+          .form-text
+            = f.text_area :body
+        = f.submit 'Save'
+  br

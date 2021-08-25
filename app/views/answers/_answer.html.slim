@@ -1,11 +1,35 @@
--if answer.persisted?
+.answer*{data: { answer_id: answer.id } }
   .card
     .card-body
+      - if answer.best
+        b= 'Best answer!'
+        br
+
       b= "#{answer.author.email} answers:"
       p= answer.body
+
+      - if current_user&.author_of?(answer.question) && !answer.best
+        p= link_to 'Mark as best',
+                      mark_best_answer_path(answer),
+                      method: :patch,
+                      remote: true
+
       - if current_user&.author_of?(answer)
-        = link_to 'Delete Answer',
+        = link_to 'Edit', '#', class: 'edit-answer-link', data: { answer_id: answer.id }
+        = ' | '
+        = link_to 'Delete',
                       answer_path(answer),
                       method: :delete,
+                      remote: true,
                       data: { confirm: 'Are you sure?' }
+
+      .edit-answer-errors
+        = render 'shared/errors', resource: answer
+       
+      = form_with model: answer, class: 'd-none', html: { id: "edit-answer-#{answer.id}" }, local: false do |f|
+        .form-group
+          = f.label :body, 'Your answer:'
+          .form-text
+            = f.text_area :body
+          = f.submit 'Save'
   br

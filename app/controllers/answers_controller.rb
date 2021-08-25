@@ -1,42 +1,31 @@
 # frozen_string_literal: true
 
 class AnswersController < ApplicationController
-  before_action :authenticate_user!, except: :show
-  before_action :find_question, only: %i[new create]
-  before_action :find_answer, only: %i[show destroy]
-
-  def show; end
-
-  def new
-    @answer = Answer.new
-  end
+  before_action :authenticate_user!
+  before_action :find_answer, only: %i[destroy update mark_best]
 
   def create
+    @question = Question.find(params[:question_id])
     @answer = @question.answers.build(answer_params)
     @answer.author = current_user
+    @answer.save
+  end
 
-    if @answer.save
-      redirect_to @answer.question, notice: 'Your answer successfully added.'
-    else
-      render 'questions/show'
-    end
+  def update
+    @answer.update(answer_params) if current_user.author_of?(@answer)
+    @question = @answer.question
   end
 
   def destroy
-    if current_user.author_of?(@answer)
-      @answer.destroy
-      flash[:notice] = 'Your answer successfully deleted.'
-    else
-      flash[:alert] = "You can't delete answers from other users."
-    end
-    redirect_to question_path(@answer.question)
+    @answer.destroy if current_user.author_of?(@answer)
+  end
+
+  def mark_best
+    @question = @answer.question
+    @question.change_best(@answer) if current_user.author_of?(@question)
   end
 
   private
-
-  def find_question
-    @question = Question.find(params[:question_id])
-  end
 
   def find_answer
     @answer = Answer.find(params[:id])

@@ -16,6 +16,9 @@ Metrics/PerceivedComplexity:
 Metrics/BlockLength:
   Enabled: true
   Exclude: 
+    - spec/models/*
     - spec/controllers/*
+    - spec/features/answer/*
+    - spec/features/question/*
     - config/environments/*
     - db/schema.rb

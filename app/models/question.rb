@@ -7,4 +7,15 @@ class Question < ApplicationRecord
 
   validates :title, presence: true
   validates :body, presence: true
+
+  def best_answer
+    answers.find_by(best: true)
+  end
+
+  def change_best(answer)
+    transaction do
+      best_answer&.update(best: false)
+      answer.update(best: true)
+    end
+  end
 end

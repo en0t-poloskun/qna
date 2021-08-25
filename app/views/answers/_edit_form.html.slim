@@ -1,0 +1,6 @@
+= form_with model: answer, local: false do |f|
+  .form-group
+    = f.label :body, 'Your answer'
+    .form-text
+      = f.text_area :body
+    = f.submit 'Save'

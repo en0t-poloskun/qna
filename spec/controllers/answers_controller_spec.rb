@@ -3,44 +3,14 @@
 require 'rails_helper'
 
 describe AnswersController, type: :controller do
-  let(:answer) { create(:answer) }
-  let(:question) { create(:question) }
   let(:user) { create(:user) }
-
-  describe 'GET #show' do
-    before { get :show, params: { id: answer } }
-
-    it 'assigns the requested answer to @answer' do
-      expect(assigns(:answer)).to eq answer
-    end
-
-    it 'renders show view' do
-      expect(response).to render_template :show
-    end
-  end
-
-  describe 'GET #new' do
-    before { login(user) }
-
-    before { get :new, params: { question_id: question } }
-
-    it 'assigns the requested question to @question' do
-      expect(assigns(:question)).to eq question
-    end
-
-    it 'assigns a new Answer to @answer' do
-      expect(assigns(:answer)).to be_a_new(Answer)
-    end
-
-    it 'renders new view' do
-      expect(response).to render_template :new
-    end
-  end
+  let(:question) { create(:question) }
+  let(:answer) { create(:answer, question: question) }
 
   describe 'POST #create' do
     before { login(user) }
 
-    let(:post_create) { post :create, params: { question_id: question, answer: answer_params } }
+    let(:post_create) { post :create, params: { question_id: question, answer: answer_params }, format: :js }
 
     context 'with valid attributes' do
       let(:answer_params) { attributes_for(:answer) }
@@ -54,9 +24,9 @@ describe AnswersController, type: :controller do
         expect(assigns(:answer).author).to eq user
       end
 
-      it 'redirects to question show view' do
+      it 'renders question show template' do
         post_create
-        expect(response).to redirect_to assigns(:answer).question
+        expect(response).to render_template :create
       end
     end
 
@@ -67,9 +37,9 @@ describe AnswersController, type: :controller do
         expect { post_create }.to_not change(Answer, :count)
       end
 
-      it 're-renders question show view' do
+      it 'renders question show template' do
         post_create
-        expect(response).to render_template 'questions/show'
+        expect(response).to render_template :create
       end
     end
   end
@@ -77,7 +47,7 @@ describe AnswersController, type: :controller do
   describe 'DELETE #destroy' do
     before { login(user) }
 
-    let(:delete_request) { delete :destroy, params: { id: answer } }
+    let(:delete_request) { delete :destroy, params: { id: answer }, format: :js }
 
     context 'when user is an author' do
       let!(:answer) { create(:answer, author: user) }
@@ -86,23 +56,109 @@ describe AnswersController, type: :controller do
         expect { delete_request }.to change(user.answers, :count).by(-1)
       end
 
-      it "redirects to answer's question show" do
+      it 'renders destroy template' do
         delete_request
-        expect(response).to redirect_to question_path(answer.question)
+        expect(response).to render_template :destroy
       end
     end
 
     context 'when user is not an author' do
       let!(:answer) { create(:answer) }
 
-      it 'does not delete the question' do
+      it 'does not delete the answer' do
         expect { delete_request }.to_not change(Answer, :count)
+      end
+
+      it 'renders destroy template' do
+        delete_request
+        expect(response).to render_template :destroy
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+    before { login(user) }
+
+    let(:patch_update) { patch :update, params: { id: answer, answer: answer_params }, format: :js }
+
+    context 'when user is an author' do
+      let!(:answer) { create(:answer, author: user) }
+
+      context 'with valid attributes' do
+        let(:answer_params) { { body: 'new body' } }
+
+        it 'changes answer attributes' do
+          patch_update
+          answer.reload
+          expect(answer.body).to eq 'new body'
+        end
+
+        it 'renders update template' do
+          patch_update
+          expect(response).to render_template :update
+        end
+      end
+
+      context 'with invalid attributes' do
+        let(:answer_params) { attributes_for(:answer, :invalid) }
+
+        it 'does not change answer attributes' do
+          expect { patch_update }.to_not change(answer, :body)
+        end
+
+        it 'renders update template' do
+          patch_update
+          expect(response).to render_template :update
+        end
       end
     end
 
-    it "redirects to answer's question show" do
-      delete_request
-      expect(response).to redirect_to question_path(answer.question)
+    context 'when user is not an author' do
+      let!(:answer) { create(:answer) }
+      let(:answer_params) { { body: 'new body' } }
+
+      it 'does not change answer attributes' do
+        expect { patch_update }.to_not change(answer, :body)
+      end
+
+      it 'renders update template' do
+        patch_update
+        expect(response).to render_template :update
+      end
+    end
+  end
+
+  describe 'PATCH #mark_best' do
+    before { login(user) }
+
+    let(:patch_mark_best) { patch :mark_best, params: { id: answer }, format: :js }
+
+    context 'when user is author of question' do
+      let!(:question) { create(:question, author: user) }
+
+      it "changes answer's best attribute" do
+        patch_mark_best
+        answer.reload
+        expect(answer.best).to eq true
+      end
+
+      it 'renders mark_best template' do
+        patch_mark_best
+        expect(response).to render_template :mark_best
+      end
+    end
+
+    context 'when user is not an author' do
+      let!(:question) { create(:question) }
+
+      it "does not change answer's best attribute" do
+        expect { patch_mark_best }.to_not change(answer, :best)
+      end
+
+      it 'renders mark_best template' do
+        patch_mark_best
+        expect(response).to render_template :mark_best
+      end
     end
   end
 end
