@@ -15,11 +15,11 @@ feature 'Author of question can delete attached files', "
       question.files.attach(Rack::Test::UploadedFile.new(Rails.root.join('Gemfile.lock')))
     end
 
-    scenario 'deletes files attached to his question' do
+    scenario 'deletes files attached to his question', js: true do
       user.questions.push(question)
 
       visit question_path(question)
-      click_on 'Delete file'
+      page.accept_confirm { click_link 'Delete' }
 
       expect(page).not_to have_link 'Gemfile.lock'
     end
