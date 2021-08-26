@@ -52,4 +52,29 @@ describe Question, type: :model do
       end
     end
   end
+
+  describe '#edit' do
+    let(:question) { create(:question) }
+
+    it 'changes title and body' do
+      params = { title: 'new title', body: 'new body' }
+      question.edit(params)
+      question.reload
+
+      expect(question.title).to eq 'new title'
+      expect(question.body).to eq 'new body'
+    end
+
+    it 'adds files' do
+      question.files.attach(Rack::Test::UploadedFile.new(Rails.root.join('Gemfile.lock')))
+      params = { title: 'new title', body: 'new body',
+                 files: [Rack::Test::UploadedFile.new(Rails.root.join('Gemfile')),
+                         Rack::Test::UploadedFile.new(Rails.root.join('config.ru'))] }
+
+      question.edit(params)
+      question.reload
+
+      expect(question.files.count).to eq 3
+    end
+  end
 end

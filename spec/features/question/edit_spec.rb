@@ -49,6 +49,7 @@ feature 'User can edit his question', "
 
     scenario 'adds files to his question' do
       user.questions.push(question)
+      question.files.attach(Rack::Test::UploadedFile.new(Rails.root.join('Gemfile.lock')))
 
       visit questions_path
 
@@ -58,6 +59,7 @@ feature 'User can edit his question', "
         attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
         click_on 'Save'
 
+        expect(page).to have_link 'Gemfile.lock'
         expect(page).to have_link 'rails_helper.rb'
         expect(page).to have_link 'spec_helper.rb'
         expect(page).not_to have_selector 'filefield'
