@@ -6,14 +6,10 @@ feature 'Author of question can delete attached files', "
   I'd like to be able to delete attached files
 " do
   given(:user) { create(:user) }
-  given(:question) { create(:question) }
+  given(:question) { create(:question, files: [Rack::Test::UploadedFile.new(Rails.root.join('Gemfile.lock'))]) }
 
   describe 'authenticated user' do
-    background do
-      sign_in(user)
-
-      question.files.attach(Rack::Test::UploadedFile.new(Rails.root.join('Gemfile.lock')))
-    end
+    background { sign_in(user) }
 
     scenario 'deletes files attached to his question', js: true do
       user.questions.push(question)
