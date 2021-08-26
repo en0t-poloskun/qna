@@ -33,5 +33,10 @@
           = f.label :body, 'Your answer:'
           .form-text
             = f.text_area :body
-          = f.submit 'Save'
+        .form-group
+          = f.label :files
+          .form-text
+            = f.file_field :files, multiple: true, direct_upload: true
+        br
+        = f.submit 'Save'
   br

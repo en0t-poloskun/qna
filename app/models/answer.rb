@@ -9,4 +9,11 @@ class Answer < ApplicationRecord
   has_many_attached :files
 
   validates :body, presence: true
+
+  def edit(params)
+    transaction do
+      update(body: params[:body])
+      files.attach(params[:files]) if params[:files].present?
+    end
+  end
 end
