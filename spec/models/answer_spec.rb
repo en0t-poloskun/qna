@@ -13,28 +13,4 @@ describe Answer, type: :model do
   it 'have many attached files' do
     expect(described_class.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
   end
-
-  describe '#edit' do
-    let(:answer) { create(:answer) }
-
-    it 'changes body' do
-      params = { body: 'new body' }
-      answer.edit(params)
-      answer.reload
-
-      expect(answer.body).to eq 'new body'
-    end
-
-    it 'adds files' do
-      answer.files.attach(Rack::Test::UploadedFile.new(Rails.root.join('Gemfile.lock')))
-      params = { body: 'new body',
-                 files: [Rack::Test::UploadedFile.new(Rails.root.join('Gemfile')),
-                         Rack::Test::UploadedFile.new(Rails.root.join('config.ru'))] }
-
-      answer.edit(params)
-      answer.reload
-
-      expect(answer.files.count).to eq 3
-    end
-  end
 end

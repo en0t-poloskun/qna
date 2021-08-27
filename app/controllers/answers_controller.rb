@@ -12,7 +12,7 @@ class AnswersController < ApplicationController
   end
 
   def update
-    @answer.edit(answer_params) if current_user.author_of?(@answer)
+    @answer.update(answer_params) if current_user.author_of?(@answer)
     @question = @answer.question
   end
 

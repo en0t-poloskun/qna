@@ -20,11 +20,4 @@ class Question < ApplicationRecord
       answer.update(best: true)
     end
   end
-
-  def edit(params)
-    transaction do
-      update(title: params[:title], body: params[:body])
-      files.attach(params[:files]) if params[:files].present?
-    end
-  end
 end
