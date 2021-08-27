@@ -8,6 +8,10 @@ describe Question, type: :model do
   it { is_expected.to validate_presence_of :title }
   it { is_expected.to validate_presence_of :body }
 
+  it 'have many attached files' do
+    expect(described_class.new.files).to be_an_instance_of(ActiveStorage::Attached::Many)
+  end
+
   describe '#best_answer' do
     let(:question) { create(:question) }
     let(:answer) { create(:answer, question: question) }

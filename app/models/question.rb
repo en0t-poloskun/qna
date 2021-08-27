@@ -5,6 +5,8 @@ class Question < ApplicationRecord
 
   has_many :answers, dependent: :destroy
 
+  has_many_attached :files
+
   validates :title, presence: true
   validates :body, presence: true
 
@@ -14,8 +16,8 @@ class Question < ApplicationRecord
 
   def change_best(answer)
     transaction do
-      best_answer&.update(best: false)
-      answer.update(best: true)
+      best_answer&.update!(best: false)
+      answer.update!(best: true)
     end
   end
 end

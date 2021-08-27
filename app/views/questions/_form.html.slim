@@ -9,4 +9,9 @@
     = f.label :body
     .form-text
       = f.text_area :body
+  .form-group
+    = f.label :files
+    .form-text
+      = f.file_field :files, multiple: true, direct_upload: true
+  br
   = f.submit 'Ask'

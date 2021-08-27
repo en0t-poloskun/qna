@@ -8,6 +8,8 @@
       b= "#{answer.author.email} answers:"
       p= answer.body
 
+      = render 'shared/files', resource: answer
+
       - if current_user&.author_of?(answer.question) && !answer.best
         p= link_to 'Mark as best',
                       mark_best_answer_path(answer),
@@ -31,5 +33,10 @@
           = f.label :body, 'Your answer:'
           .form-text
             = f.text_area :body
-          = f.submit 'Save'
+        .form-group
+          = f.label :files
+          .form-text
+            = f.file_field :files, multiple: true, direct_upload: true
+        br
+        = f.submit 'Save'
   br

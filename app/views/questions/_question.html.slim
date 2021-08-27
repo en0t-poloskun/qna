@@ -4,6 +4,8 @@
       h3= link_to question.title, question_path(question)
       b= "#{question.author.email} asks:"
       p= question.body
+      = render 'shared/files', resource: question
+
       - if current_user&.author_of?(question)
         = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
         = ' | '
@@ -24,5 +26,10 @@
           = f.label :body, 'Body:'
           .form-text
             = f.text_area :body
+        .form-group
+          = f.label :files
+          .form-text
+            = f.file_field :files, multiple: true, direct_upload: true
+        br
         = f.submit 'Save'
   br

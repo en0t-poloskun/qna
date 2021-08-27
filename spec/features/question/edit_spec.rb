@@ -9,9 +9,7 @@ feature 'User can edit his question', "
   given!(:question) { create(:question) }
 
   describe 'authenticated user', js: true do
-    background do
-      sign_in(user)
-    end
+    background { sign_in(user) }
 
     scenario 'edits his question' do
       user.questions.push(question)
@@ -46,6 +44,25 @@ feature 'User can edit his question', "
 
         expect(page).to have_content "Body can't be blank"
         expect(page).to have_selector 'textarea'
+      end
+    end
+
+    scenario 'adds files to his question' do
+      user.questions.push(question)
+      question.files.attach(Rack::Test::UploadedFile.new(Rails.root.join('Gemfile.lock')))
+
+      visit questions_path
+
+      click_on 'Edit'
+
+      within '.questions' do
+        attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        click_on 'Save'
+
+        expect(page).to have_link 'Gemfile.lock'
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'spec_helper.rb'
+        expect(page).not_to have_selector 'filefield'
       end
     end
 
