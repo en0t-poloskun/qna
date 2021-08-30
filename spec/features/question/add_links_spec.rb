@@ -42,6 +42,6 @@ feature 'User can add links to question', "
 
     click_on 'Ask'
 
-    expect(page).to have_content 'Error message'
+    expect(page).to have_content 'Links url is invalid'
   end
 end

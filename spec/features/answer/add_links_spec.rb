@@ -37,13 +37,13 @@ feature 'User can add links to answer', "
     end
   end
 
-  scenario 'User adds a link with errors' do
+  scenario 'User adds a link with errors', js: true do
     visit question_path(question)
 
     fill_in 'Url', with: 'badurl'
 
     click_on 'Add'
 
-    expect(page).to have_content 'Error message'
+    expect(page).to have_content 'Links url is invalid'
   end
 end
