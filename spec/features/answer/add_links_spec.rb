@@ -10,9 +10,9 @@ feature 'User can add links to answer', "
   given(:google_url) { 'https://www.google.com/' }
   given(:yandex_url) { 'https://yandex.ru/' }
 
-  scenario 'User adds links when give an answer', js: true do
-    sign_in(user)
+  background { sign_in(user) }
 
+  scenario 'User adds links when give an answer', js: true do
     visit question_path(question)
 
     fill_in 'Body', with: 'My answer'
@@ -35,5 +35,15 @@ feature 'User can add links to answer', "
       expect(page).to have_link 'Google', href: google_url
       expect(page).to have_link 'Yandex', href: yandex_url
     end
+  end
+
+  scenario 'User adds a link with errors' do
+    visit question_path(question)
+
+    fill_in 'Url', with: 'badurl'
+
+    click_on 'Add'
+
+    expect(page).to have_content 'Error message'
   end
 end

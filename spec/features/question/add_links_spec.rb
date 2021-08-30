@@ -9,8 +9,9 @@ feature 'User can add links to question', "
   given(:google_url) { 'https://www.google.com/' }
   given(:yandex_url) { 'https://yandex.ru/' }
 
+  background { sign_in(user) }
+
   scenario 'User adds links when asks question', js: true do
-    sign_in(user)
     visit new_question_path
 
     fill_in 'Title', with: 'Test question'
@@ -32,5 +33,15 @@ feature 'User can add links to question', "
 
     expect(page).to have_link 'Google', href: google_url
     expect(page).to have_link 'Yandex', href: yandex_url
+  end
+
+  scenario 'User adds a link with errors' do
+    visit new_question_path
+
+    fill_in 'Url', with: 'badurl'
+
+    click_on 'Ask'
+
+    expect(page).to have_content 'Error message'
   end
 end
