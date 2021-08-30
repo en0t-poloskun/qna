@@ -9,6 +9,7 @@ feature 'User can add links to answer', "
   given!(:question) { create(:question) }
   given(:google_url) { 'https://www.google.com/' }
   given(:yandex_url) { 'https://yandex.ru/' }
+  given(:gist_url) { 'https://gist.github.com/en0t-poloskun/f0dbcb1ccd8ba61448c5c17a08c5f90b' }
 
   background { sign_in(user) }
 
@@ -45,5 +46,20 @@ feature 'User can add links to answer', "
     click_on 'Add'
 
     expect(page).to have_content 'Links url is invalid'
+  end
+
+  scenario 'User adds a link with gist' do
+    visit question_path(question)
+
+    fill_in 'Body', with: 'My answer'
+
+    fill_in 'Link name', with: 'My gist'
+    fill_in 'Url', with: gist_url
+
+    click_on 'Add'
+
+    within '.answers' do
+      expect(page).to have_content 'Hello world!'
+    end
   end
 end

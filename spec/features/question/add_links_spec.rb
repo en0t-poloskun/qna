@@ -8,6 +8,7 @@ feature 'User can add links to question', "
   given(:user) { create(:user) }
   given(:google_url) { 'https://www.google.com/' }
   given(:yandex_url) { 'https://yandex.ru/' }
+  given(:gist_url) { 'https://gist.github.com/en0t-poloskun/f0dbcb1ccd8ba61448c5c17a08c5f90b' }
 
   background { sign_in(user) }
 
@@ -43,5 +44,19 @@ feature 'User can add links to question', "
     click_on 'Ask'
 
     expect(page).to have_content 'Links url is invalid'
+  end
+
+  scenario 'User adds a link with gist' do
+    visit new_question_path
+
+    fill_in 'Title', with: 'Test question'
+    fill_in 'Body', with: 'text text text'
+
+    fill_in 'Link name', with: 'My gist'
+    fill_in 'Url', with: gist_url
+
+    click_on 'Ask'
+
+    expect(page).to have_content 'Hello world!'
   end
 end
