@@ -4,6 +4,8 @@ p= @question.body
 
 = render 'shared/files', resource: @question
 
+= render 'shared/user_links', resource: @question
+
 .answers
   = render @answers
 

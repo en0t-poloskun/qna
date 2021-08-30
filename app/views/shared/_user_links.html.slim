@@ -1,0 +1,6 @@
+- unless resource.links.empty?  
+  .user-links
+    b Links:
+    ul
+      - resource.links.each do |link|
+        li= link_to link.name, link.url, target: '_blank', rel: 'nofollow'

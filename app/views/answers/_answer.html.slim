@@ -9,6 +9,7 @@
       p= answer.body
 
       = render 'shared/files', resource: answer
+      = render 'shared/user_links', resource: answer
 
       - if current_user&.author_of?(answer.question) && !answer.best
         p= link_to 'Mark as best',

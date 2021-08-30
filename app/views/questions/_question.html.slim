@@ -5,6 +5,7 @@
       b= "#{question.author.email} asks:"
       p= question.body
       = render 'shared/files', resource: question
+      = render 'shared/user_links', resource: question
 
       - if current_user&.author_of?(question)
         = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
