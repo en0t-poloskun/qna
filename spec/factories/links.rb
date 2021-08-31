@@ -2,8 +2,8 @@
 
 FactoryBot.define do
   factory :link do
-    name { 'MyString' }
-    url { 'MyString' }
+    name { 'MyLink' }
+    url { 'https://www.google.com/' }
     linkable { build(:question) }
   end
 end

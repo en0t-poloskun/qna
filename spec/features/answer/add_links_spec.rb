@@ -13,55 +13,84 @@ feature 'User can add links to answer', "
 
   background { sign_in(user) }
 
-  scenario 'User adds links when give an answer', js: true do
-    visit question_path(question)
+  describe 'When gives an answer', js: true do
+    background do
+      visit question_path(question)
 
-    fill_in 'Body', with: 'My answer'
-
-    within all('.nested-fields').last do
-      fill_in 'Link name', with: 'Google'
-      fill_in 'Url', with: google_url
+      fill_in 'Body', with: 'My answer'
     end
 
-    click_on 'add link'
+    scenario 'user adds links' do
+      within all('.nested-fields').last do
+        fill_in 'Link name', with: 'Google'
+        fill_in 'Url', with: google_url
+      end
 
-    within all('.nested-fields').last do
-      fill_in 'Link name', with: 'Yandex'
-      fill_in 'Url', with: yandex_url
+      click_on 'add link'
+
+      within all('.nested-fields').last do
+        fill_in 'Link name', with: 'Yandex'
+        fill_in 'Url', with: yandex_url
+      end
+
+      click_on 'Add'
+
+      within '.answers' do
+        expect(page).to have_link 'Google', href: google_url
+        expect(page).to have_link 'Yandex', href: yandex_url
+      end
     end
 
-    click_on 'Add'
+    scenario 'user adds a link with errors' do
+      fill_in 'Url', with: 'badurl'
 
-    within '.answers' do
-      expect(page).to have_link 'Google', href: google_url
-      expect(page).to have_link 'Yandex', href: yandex_url
+      click_on 'Add'
+
+      expect(page).to have_content 'Links url is invalid'
+    end
+
+    scenario 'user adds a link with gist' do
+      fill_in 'Link name', with: 'My gist'
+      fill_in 'Url', with: gist_url
+
+      click_on 'Add'
+
+      wait_for_ajax
+
+      within '.answers' do
+        expect(page).to have_content 'Hello world!'
+      end
     end
   end
 
-  scenario 'User adds a link with errors', js: true do
-    visit question_path(question)
+  describe 'When edits answer' do
+    given!(:answer) { create(:answer, question: question, author: user) }
+    given!(:old_link) { create(:link, linkable: answer) }
 
-    fill_in 'Url', with: 'badurl'
+    scenario 'user adds links' do
+      visit question_path(question)
 
-    click_on 'Add'
+      click_on 'Edit'
 
-    expect(page).to have_content 'Links url is invalid'
-  end
+      within '.answers' do
+        within all('.nested-fields').last do
+          fill_in 'Link name', with: 'Google'
+          fill_in 'Url', with: google_url
+        end
 
-  scenario 'User adds a link with gist', js: true do
-    visit question_path(question)
+        click_on 'add link'
 
-    fill_in 'Body', with: 'My answer'
+        within all('.nested-fields').last do
+          fill_in 'Link name', with: 'Yandex'
+          fill_in 'Url', with: yandex_url
+        end
 
-    fill_in 'Link name', with: 'My gist'
-    fill_in 'Url', with: gist_url
+        click_on 'Save'
 
-    click_on 'Add'
-
-    wait_for_ajax
-
-    within '.answers' do
-      expect(page).to have_content 'Hello world!'
+        expect(page).to have_link old_link.name, href: old_link.url
+        expect(page).to have_link 'Google', href: google_url
+        expect(page).to have_link 'Yandex', href: yandex_url
+      end
     end
   end
 end

@@ -12,51 +12,79 @@ feature 'User can add links to question', "
 
   background { sign_in(user) }
 
-  scenario 'User adds links when asks question', js: true do
-    visit new_question_path
+  describe 'When asks question' do
+    background do
+      visit new_question_path
 
-    fill_in 'Title', with: 'Test question'
-    fill_in 'Body', with: 'text text text'
-
-    within all('.nested-fields').last do
-      fill_in 'Link name', with: 'Google'
-      fill_in 'Url', with: google_url
+      fill_in 'Title', with: 'Test question'
+      fill_in 'Body', with: 'text text text'
     end
 
-    click_on 'add link'
+    scenario 'user adds links', js: true do
+      within all('.nested-fields').last do
+        fill_in 'Link name', with: 'Google'
+        fill_in 'Url', with: google_url
+      end
 
-    within all('.nested-fields').last do
-      fill_in 'Link name', with: 'Yandex'
-      fill_in 'Url', with: yandex_url
+      click_on 'add link'
+
+      within all('.nested-fields').last do
+        fill_in 'Link name', with: 'Yandex'
+        fill_in 'Url', with: yandex_url
+      end
+
+      click_on 'Ask'
+
+      expect(page).to have_link 'Google', href: google_url
+      expect(page).to have_link 'Yandex', href: yandex_url
     end
 
-    click_on 'Ask'
+    scenario 'user adds a link with errors' do
+      fill_in 'Url', with: 'badurl'
 
-    expect(page).to have_link 'Google', href: google_url
-    expect(page).to have_link 'Yandex', href: yandex_url
+      click_on 'Ask'
+
+      expect(page).to have_content 'Links url is invalid'
+    end
+
+    scenario 'user adds a link with gist' do
+      fill_in 'Link name', with: 'My gist'
+      fill_in 'Url', with: gist_url
+
+      click_on 'Ask'
+
+      expect(page).to have_content 'Hello world!'
+    end
   end
 
-  scenario 'User adds a link with errors' do
-    visit new_question_path
+  describe 'When edits question' do
+    given!(:question) { create(:question, author: user) }
+    given!(:old_link) { create(:link, linkable: question) }
 
-    fill_in 'Url', with: 'badurl'
+    scenario 'user adds links' do
+      visit questions_path
 
-    click_on 'Ask'
+      click_on 'Edit'
 
-    expect(page).to have_content 'Links url is invalid'
-  end
+      within '.questions' do
+        within all('.nested-fields').last do
+          fill_in 'Link name', with: 'Google'
+          fill_in 'Url', with: google_url
+        end
 
-  scenario 'User adds a link with gist' do
-    visit new_question_path
+        click_on 'add link'
 
-    fill_in 'Title', with: 'Test question'
-    fill_in 'Body', with: 'text text text'
+        within all('.nested-fields').last do
+          fill_in 'Link name', with: 'Yandex'
+          fill_in 'Url', with: yandex_url
+        end
 
-    fill_in 'Link name', with: 'My gist'
-    fill_in 'Url', with: gist_url
+        click_on 'Save'
 
-    click_on 'Ask'
-
-    expect(page).to have_content 'Hello world!'
+        expect(page).to have_link old_link.name, href: old_link.url
+        expect(page).to have_link 'Google', href: google_url
+        expect(page).to have_link 'Yandex', href: yandex_url
+      end
+    end
   end
 end
