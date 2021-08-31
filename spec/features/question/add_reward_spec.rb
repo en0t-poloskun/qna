@@ -9,7 +9,7 @@ feature 'User can create best answer reward', "
 
   background { sign_in(user) }
 
-  scenario 'User creates reward when asks question', js: true do
+  scenario 'User creates reward when asks question' do
     visit new_question_path
 
     fill_in 'Title', with: 'Test question'

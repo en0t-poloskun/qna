@@ -22,4 +22,15 @@
       br
       = link_to_add_association 'add link', f, :links, partial: 'shared/link_fields'
   br
+  h3 Reward:
+  p
+    = f.fields_for :reward do |r|
+      .field
+        = r.label :name, 'Reward name'
+        br
+        = r.text_field :name
+      .field
+        = r.label :image
+        br
+        = r.file_field :image, direct_upload: true
   = f.submit 'Ask'

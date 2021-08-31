@@ -32,6 +32,10 @@ describe QuestionsController, type: :controller do
       expect(assigns(:question).links.first).to be_a_new(Link)
     end
 
+    it 'creates a new Reward for @question' do
+      expect(assigns(:question).reward).to be_a_new(Reward)
+    end
+
     it 'renders new view' do
       expect(response).to render_template :new
     end

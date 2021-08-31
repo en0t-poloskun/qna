@@ -4,6 +4,7 @@ describe User, type: :model do
   describe 'Associations' do
     it { is_expected.to have_many(:questions).dependent(:destroy) }
     it { is_expected.to have_many(:answers).dependent(:destroy) }
+    it { is_expected.to have_many(:rewards).dependent(:nullify) }
   end
 
   describe '#author_of?' do
