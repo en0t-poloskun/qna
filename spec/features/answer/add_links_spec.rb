@@ -48,7 +48,7 @@ feature 'User can add links to answer', "
     expect(page).to have_content 'Links url is invalid'
   end
 
-  scenario 'User adds a link with gist' do
+  scenario 'User adds a link with gist', js: true do
     visit question_path(question)
 
     fill_in 'Body', with: 'My answer'
@@ -57,6 +57,8 @@ feature 'User can add links to answer', "
     fill_in 'Url', with: gist_url
 
     click_on 'Add'
+
+    wait_for_ajax
 
     within '.answers' do
       expect(page).to have_content 'Hello world!'

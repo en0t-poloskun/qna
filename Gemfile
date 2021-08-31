@@ -33,6 +33,7 @@ gem 'bootsnap', '>= 1.4.4', require: false
 gem 'bootstrap', '~> 5.0.1'
 gem 'cocoon'
 gem 'devise'
+gem 'octokit', '~> 4.0'
 gem 'rubocop-rspec', require: false
 gem 'slim-rails'
 
