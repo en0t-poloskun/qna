@@ -8,7 +8,7 @@ feature 'Author of answer can delete attached links', "
   given(:user) { create(:user) }
   given(:question) { create(:question) }
   given(:answer) { create(:answer, question: question) }
-  given(:link) { create(:link, linkable: answer) }
+  given!(:link) { create(:link, linkable: answer) }
 
   describe 'authenticated user' do
     background { sign_in(user) }

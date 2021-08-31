@@ -44,4 +44,4 @@ RSpec/NestedGroups:
 
 RSpec/ExampleLength:
   Enabled: true
-  Max: 17
+  Max: 15

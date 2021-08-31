@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe FilesController, type: :controller do
   let(:user) { create(:user) }
   let(:file) { Rack::Test::UploadedFile.new(Rails.root.join('Gemfile.lock')) }

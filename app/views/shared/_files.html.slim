@@ -1,4 +1,5 @@
 - if resource.files.attached?
+  b Files:
   .container
     - resource.files.each do |file|
       .row*{data: { row_id: file.id } }

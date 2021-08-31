@@ -7,7 +7,7 @@ feature 'Author of question can delete attached links', "
 " do
   given(:user) { create(:user) }
   given(:question) { create(:question) }
-  given(:link) { create(:link, linkable: question) }
+  given!(:link) { create(:link, linkable: question) }
 
   describe 'authenticated user' do
     background { sign_in(user) }
