@@ -2,10 +2,9 @@
 
 describe RewardsController, type: :controller do
   let(:user) { create(:user) }
-  let(:image) { Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/ruby.png')) }
 
   describe 'GET #index' do
-    let(:rewards) { create_list(:reward, 3, owner: user, image: image) }
+    let(:rewards) { create_list(:reward, 3, owner: user) }
 
     before do
       login(user)

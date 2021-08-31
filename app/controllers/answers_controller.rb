@@ -22,7 +22,7 @@ class AnswersController < ApplicationController
 
   def mark_best
     @question = @answer.question
-    @question.change_best(@answer) if current_user.author_of?(@question)
+    MarkBestService.new(@answer, @question.reward).call if current_user.author_of?(@question)
   end
 
   private

@@ -7,12 +7,11 @@ feature 'Author of the question can reward the best answer', "
 " do
   given(:user) { create(:user) }
   given(:question) { create(:question, author: user) }
-  given(:image) { Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/ruby.png')) }
 
   background { sign_in(user) }
 
   describe 'When user chooses best answer for award', js: true do
-    given!(:reward) { create(:reward, question: question, image: image) }
+    given!(:reward) { create(:reward, question: question) }
     given!(:answer) { create(:answer, question: question, author: user) }
 
     scenario "best answer's author receives an reward" do
@@ -32,7 +31,7 @@ feature 'Author of the question can reward the best answer', "
 
   describe 'When user chooses another best answer for award', js: true do
     given(:another_user) { create(:user) }
-    given!(:reward) { create(:reward, question: question, image: image, owner: user) }
+    given!(:reward) { create(:reward, question: question, owner: user) }
     given!(:best_answer) { create(:answer, author: user, best: true) }
     given!(:another_answer) { create(:answer, question: question, author: another_user) }
 

@@ -9,4 +9,8 @@ class Reward < ApplicationRecord
   validates :name, presence: true
 
   validates :image, attached: true, content_type: ['image/png', 'image/jpg', 'image/jpeg']
+
+  def change_owner(user)
+    update!(owner: user)
+  end
 end
