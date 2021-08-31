@@ -14,10 +14,10 @@
   b Links:
   #links
     = f.fields_for :links do |link|
-      = render 'link_fields', f: link
+      = render 'shared/link_fields', f: link
     .links
       br
-      = link_to_add_association 'add link', f, :links
+      = link_to_add_association 'add link', f, :links, partial: 'shared/link_fields'
   br
   = f.submit 'Add'
 

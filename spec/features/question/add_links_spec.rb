@@ -61,28 +61,20 @@ feature 'User can add links to question', "
     given!(:question) { create(:question, author: user) }
     given!(:old_link) { create(:link, linkable: question) }
 
-    scenario 'user adds links' do
+    scenario 'user adds new link', js: true do
       visit questions_path
 
       click_on 'Edit'
 
       within '.questions' do
-        within all('.nested-fields').last do
-          fill_in 'Link name', with: 'Google'
-          fill_in 'Url', with: google_url
-        end
-
         click_on 'add link'
 
-        within all('.nested-fields').last do
-          fill_in 'Link name', with: 'Yandex'
-          fill_in 'Url', with: yandex_url
-        end
+        fill_in 'Link name', with: 'Yandex'
+        fill_in 'Url', with: yandex_url
 
         click_on 'Save'
 
         expect(page).to have_link old_link.name, href: old_link.url
-        expect(page).to have_link 'Google', href: google_url
         expect(page).to have_link 'Yandex', href: yandex_url
       end
     end

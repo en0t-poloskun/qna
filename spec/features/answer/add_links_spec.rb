@@ -55,8 +55,6 @@ feature 'User can add links to answer', "
 
       click_on 'Add'
 
-      wait_for_ajax
-
       within '.answers' do
         expect(page).to have_content 'Hello world!'
       end
@@ -67,28 +65,20 @@ feature 'User can add links to answer', "
     given!(:answer) { create(:answer, question: question, author: user) }
     given!(:old_link) { create(:link, linkable: answer) }
 
-    scenario 'user adds links' do
+    scenario 'user adds new link', js: true do
       visit question_path(question)
 
       click_on 'Edit'
 
       within '.answers' do
-        within all('.nested-fields').last do
-          fill_in 'Link name', with: 'Google'
-          fill_in 'Url', with: google_url
-        end
-
         click_on 'add link'
 
-        within all('.nested-fields').last do
-          fill_in 'Link name', with: 'Yandex'
-          fill_in 'Url', with: yandex_url
-        end
+        fill_in 'Link name', with: 'Yandex'
+        fill_in 'Url', with: yandex_url
 
         click_on 'Save'
 
         expect(page).to have_link old_link.name, href: old_link.url
-        expect(page).to have_link 'Google', href: google_url
         expect(page).to have_link 'Yandex', href: yandex_url
       end
     end

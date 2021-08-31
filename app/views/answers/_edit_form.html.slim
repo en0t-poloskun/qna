@@ -1,6 +1,18 @@
-= form_with model: answer, local: false do |f|
-  .form-group
+= form_with model: answer, class: 'd-none', html: { id: "edit-answer-#{answer.id}" }, local: false do |f|
+  .field
     = f.label :body, 'Your answer'
-    .form-text
-      = f.text_area :body
-    = f.submit 'Save'
+    br
+    = f.text_area :body
+  .field
+    = f.label :files
+    br
+    = f.file_field :files, multiple: true, direct_upload: true
+  br
+  b Links:
+  #links
+    = f.fields_for :links do |link|
+    .links
+      br
+      = link_to_add_association 'add link', f, :links, partial: 'shared/link_fields'
+  br
+  = f.submit 'Save'

@@ -1,6 +1,4 @@
-= render 'shared/errors', resource: @question
-
-= form_with model: @question, local: true do |f|
+= form_with model: question, class: 'd-none', html: { id: "edit-question-#{question.id}" }, local: false do |f|
   .field
     = f.label :title
     br
@@ -14,12 +12,11 @@
     br
     = f.file_field :files, multiple: true, direct_upload: true
   br
-  h3 Links:
+  b Links:
   #links
     = f.fields_for :links do |link|
-      = render 'shared/link_fields', f: link
     .links
       br
       = link_to_add_association 'add link', f, :links, partial: 'shared/link_fields'
   br
-  = f.submit 'Ask'
+  = f.submit 'Save'

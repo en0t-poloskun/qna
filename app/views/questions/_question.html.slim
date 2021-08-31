@@ -17,20 +17,6 @@
 
       .edit-question-errors
         = render 'shared/errors', resource: question
-        
-      = form_with model: question, class: 'd-none', html: { id: "edit-question-#{question.id}" }, local: false do |f|
-        .form-group
-          = f.label :title, 'Title:'
-          .form-text
-            = f.text_field :title
-        .form-group
-          = f.label :body, 'Body:'
-          .form-text
-            = f.text_area :body
-        .form-group
-          = f.label :files
-          .form-text
-            = f.file_field :files, multiple: true, direct_upload: true
-        br
-        = f.submit 'Save'
+
+      = render partial: 'edit_form', locals: { question: question }
   br
