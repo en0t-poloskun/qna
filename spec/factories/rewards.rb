@@ -4,6 +4,6 @@ FactoryBot.define do
   factory :reward do
     name { 'Reward name' }
     question { build(:question) }
-    owner { build(:user) }
+    owner { nil }
   end
 end
