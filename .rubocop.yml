@@ -29,6 +29,7 @@ Metrics/BlockLength:
     - spec/controllers/*
     - spec/features/answer/*
     - spec/features/question/*
+    - spec/features/reward/*
     - config/environments/*
     - db/schema.rb
 

@@ -9,6 +9,7 @@
       p= answer.body
 
       = render 'shared/files', resource: answer
+      = render 'shared/user_links', resource: answer
 
       - if current_user&.author_of?(answer.question) && !answer.best
         p= link_to 'Mark as best',
@@ -27,16 +28,6 @@
 
       .edit-answer-errors
         = render 'shared/errors', resource: answer
-       
-      = form_with model: answer, class: 'd-none', html: { id: "edit-answer-#{answer.id}" }, local: false do |f|
-        .form-group
-          = f.label :body, 'Your answer:'
-          .form-text
-            = f.text_area :body
-        .form-group
-          = f.label :files
-          .form-text
-            = f.file_field :files, multiple: true, direct_upload: true
-        br
-        = f.submit 'Save'
+      
+      = render partial: 'answers/edit_form', locals: { answer: answer }
   br

@@ -22,7 +22,7 @@ class AnswersController < ApplicationController
 
   def mark_best
     @question = @answer.question
-    @question.change_best(@answer) if current_user.author_of?(@question)
+    MarkBestService.new(@answer, @question.reward).call if current_user.author_of?(@question)
   end
 
   private
@@ -32,6 +32,6 @@ class AnswersController < ApplicationController
   end
 
   def answer_params
-    params.require(:answer).permit(:body, files: [])
+    params.require(:answer).permit(:body, files: [], links_attributes: %i[name url])
   end
 end

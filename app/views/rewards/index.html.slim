@@ -1,0 +1,17 @@
+h1 My Rewards
+br
+
+- unless @rewards.empty?
+  table class="table table-bordered"
+    thead
+      tr
+        th scope="col"
+          p Question
+        th scope="col"
+          p Name
+        th scope="col"
+          p Image
+    tbody
+      = render @rewards
+
+= link_to 'Back', root_path

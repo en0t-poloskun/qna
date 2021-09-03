@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:question) { create(:question) }
@@ -141,6 +139,7 @@ describe AnswersController, type: :controller do
     before { login(user) }
 
     let(:patch_mark_best) { patch :mark_best, params: { id: answer }, format: :js }
+    let!(:reward) { create(:reward, question: question) }
 
     context 'when user is author of question' do
       let(:question) { create(:question, author: user) }
@@ -150,6 +149,13 @@ describe AnswersController, type: :controller do
         answer.reload
 
         expect(answer.best).to eq true
+      end
+
+      it 'assigns owner for reward' do
+        patch_mark_best
+        reward.reload
+
+        expect(reward.owner).to eq answer.author
       end
 
       it 'renders mark_best template' do
@@ -164,6 +170,10 @@ describe AnswersController, type: :controller do
 
       it "does not change answer's best attribute" do
         expect { patch_mark_best }.not_to change(answer, :best)
+      end
+
+      it "does not change reward's owner" do
+        expect { patch_mark_best }.not_to change(reward, :owner)
       end
 
       it 'renders mark_best template' do

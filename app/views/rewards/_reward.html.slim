@@ -1,0 +1,7 @@
+tr
+  td
+    = link_to reward.question.title, question_path(reward.question)
+  td
+    = reward.name
+  td
+    = image_tag("#{ url_for(reward.image) }")
