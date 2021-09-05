@@ -18,6 +18,8 @@ module Voted
   private
 
   def vote(value)
+    return if current_user.author_of?(@votable)
+
     @votable.votes.create!(value: value, voter: current_user)
 
     respond_to do |format|

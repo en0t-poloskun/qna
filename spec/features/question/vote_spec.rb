@@ -27,7 +27,7 @@ feature 'User can vote for question', "
       expect(page).to have_content 'Rating: -1'
     end
 
-    scenario 'tries to vote for his answer' do
+    scenario 'tries to vote for his question' do
       user.questions.push(question)
 
       visit question_path(question)

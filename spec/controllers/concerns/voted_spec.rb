@@ -27,6 +27,20 @@ shared_examples_for 'voted' do
         expect(response.body).to eq rating_json
       end
     end
+
+    context 'when user is an author' do
+      let(:votable) { create(model.to_s.underscore.to_sym, author: user) }
+
+      it 'does not save a new vote in the database' do
+        expect { post_vote_for }.to change(votable.votes, :count).by(0)
+      end
+
+      it 'returns status: No Content' do
+        post_vote_for
+
+        expect(response.status).to eq 204
+      end
+    end
   end
 
   describe 'POST #vote_against' do
