@@ -14,6 +14,6 @@ class User < ApplicationRecord
   end
 
   def voted?(resource)
-    votes.where(votable: resource).present?
+    votes.find_by(votable: resource).present?
   end
 end

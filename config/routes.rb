@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     member do
       post :vote_for
       post :vote_against
+      delete :destroy_vote
     end
   end
 

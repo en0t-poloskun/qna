@@ -73,6 +73,41 @@ shared_examples_for 'voted' do
 
       it 'renders rating json' do
         post_vote_against
+
+        expect(response.body).to eq rating_json
+      end
+    end
+  end
+
+  describe 'DELETE #destroy_vote' do
+    before { login(user) }
+
+    context 'when user is a voter' do
+      before { create(:vote, votable: votable, voter: user) }
+
+      let(:delete_destroy_vote) { delete :destroy_vote, params: { id: votable }, format: :json }
+
+      it 'deletes the vote' do
+        expect { delete_destroy_vote }.to change(votable.votes, :count).by(-1)
+      end
+
+      it 'renders rating json' do
+        delete_destroy_vote
+
+        expect(response.body).to eq rating_json
+      end
+    end
+
+    context 'when user is not a voter' do
+      let(:delete_destroy_vote) { delete :destroy_vote, params: { id: votable }, format: :json }
+
+      it 'does not delete the vote' do
+        expect { delete_destroy_vote }.not_to change(Vote, :count)
+      end
+
+      it 'renders rating json' do
+        delete_destroy_vote
+
         expect(response.body).to eq rating_json
       end
     end

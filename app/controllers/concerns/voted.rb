@@ -4,7 +4,7 @@ module Voted
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_votable, only: %i[vote_for vote_against]
+    before_action :set_votable, only: %i[vote_for vote_against destroy_vote]
   end
 
   def vote_for
@@ -13,6 +13,14 @@ module Voted
 
   def vote_against
     vote(-1)
+  end
+
+  def destroy_vote
+    @votable.votes.find_by(voter: current_user)&.destroy!
+
+    respond_to do |format|
+      format.json { render json: rating }
+    end
   end
 
   private
