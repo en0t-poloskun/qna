@@ -41,6 +41,20 @@ shared_examples_for 'voted' do
         expect(response.status).to eq 204
       end
     end
+
+    context 'when user has already voted' do
+      before { create(:vote, votable: votable, voter: user) }
+
+      it 'does not save a new vote in the database' do
+        expect { post_vote_for }.to change(votable.votes, :count).by(0)
+      end
+
+      it 'returns status: No Content' do
+        post_vote_for
+
+        expect(response.status).to eq 204
+      end
+    end
   end
 
   describe 'POST #vote_against' do

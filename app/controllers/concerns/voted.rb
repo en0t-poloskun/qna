@@ -18,7 +18,7 @@ module Voted
   private
 
   def vote(value)
-    return if current_user.author_of?(@votable)
+    return if current_user.author_of?(@votable) || current_user.voted?(@votable)
 
     @votable.votes.create!(value: value, voter: current_user)
 

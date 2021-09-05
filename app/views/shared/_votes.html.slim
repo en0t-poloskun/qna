@@ -1,14 +1,15 @@
-.rating id="#{resource.class.to_s.downcase}_#{resource.id}"
-  b= "Rating: #{resource.rating}"
+.vote id="#{resource.class.to_s.downcase}_#{resource.id}"
+  .rating
+    b= "Rating: #{resource.rating}"
 
-- if current_user && !current_user&.author_of?(resource)
-  .vote-links
-    = link_to 'Vote for',
-                  polymorphic_url(resource, action: :vote_for),
-                  method: :post,
-                  remote: true
-    = ' | '
-    = link_to 'Vote against',
-                  polymorphic_url(resource, action: :vote_against),
-                  method: :post,
-                  remote: true
+  - if current_user && !current_user&.author_of?(resource)
+    .vote-links class="#{ 'd-none' if current_user.voted?(resource) }"
+      = link_to 'Vote for',
+                    polymorphic_url(resource, action: :vote_for),
+                    method: :post,
+                    remote: true
+      = ' | '
+      = link_to 'Vote against',
+                    polymorphic_url(resource, action: :vote_against),
+                    method: :post,
+                    remote: true

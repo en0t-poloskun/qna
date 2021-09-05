@@ -12,4 +12,8 @@ class User < ApplicationRecord
   def author_of?(resource)
     id == resource.author_id
   end
+
+  def voted?(resource)
+    votes.where(votable: resource).present?
+  end
 end
