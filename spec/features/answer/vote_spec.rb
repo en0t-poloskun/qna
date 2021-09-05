@@ -10,13 +10,11 @@ feature 'User can vote for answer', "
   given!(:answer) { create(:answer, question: question) }
 
   describe 'authenticated user', js: true do
-    background do
-      sign_in(user)
-
-      visit question_path(question)
-    end
+    background { sign_in(user) }
 
     scenario 'votes for answer' do
+      visit question_path(question)
+
       within '.answers' do
         click_on 'Vote for'
 
@@ -25,10 +23,23 @@ feature 'User can vote for answer', "
     end
 
     scenario 'votes against answer' do
+      visit question_path(question)
+
       within '.answers' do
         click_on 'Vote against'
 
         expect(page).to have_content 'Rating: -1'
+      end
+    end
+
+    scenario 'tries to vote for his answer' do
+      user.answers.push(answer)
+
+      visit question_path(question)
+
+      within '.answers' do
+        expect(page).not_to have_link 'Vote for'
+        expect(page).not_to have_link 'Vote against'
       end
     end
   end

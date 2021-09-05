@@ -9,22 +9,31 @@ feature 'User can vote for question', "
   given(:question) { create(:question) }
 
   describe 'authenticated user', js: true do
-    background do
-      sign_in(user)
-
-      visit question_path(question)
-    end
+    background { sign_in(user) }
 
     scenario 'votes for question' do
+      visit question_path(question)
+
       click_on 'Vote for'
 
       expect(page).to have_content 'Rating: 1'
     end
 
     scenario 'votes against question' do
+      visit question_path(question)
+
       click_on 'Vote against'
 
       expect(page).to have_content 'Rating: -1'
+    end
+
+    scenario 'tries to vote for his answer' do
+      user.questions.push(question)
+
+      visit question_path(question)
+
+      expect(page).not_to have_link 'Vote for'
+      expect(page).not_to have_link 'Vote against'
     end
   end
 
