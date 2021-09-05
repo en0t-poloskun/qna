@@ -25,7 +25,9 @@
                       method: :delete,
                       remote: true,
                       data: { confirm: 'Are you sure?' }
-
+      
+      = render 'shared/votes', resource: answer
+      
       .edit-answer-errors
         = render 'shared/errors', resource: answer
       
