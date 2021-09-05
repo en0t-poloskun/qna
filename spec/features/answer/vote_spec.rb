@@ -53,6 +53,20 @@ feature 'User can vote for answer', "
         expect(page).not_to have_link 'Vote against'
       end
     end
+
+    scenario 're-votes' do
+      create(:vote, votable: answer, voter: user)
+
+      visit question_path(question)
+
+      click_on 'Re-vote'
+
+      within '.answers' do
+        expect(page).to have_content 'Rating: 0'
+        expect(page).to have_link 'Vote for'
+        expect(page).to have_link 'Vote against'
+      end
+    end
   end
 
   scenario 'unauthenticated user tries to vote for answer' do

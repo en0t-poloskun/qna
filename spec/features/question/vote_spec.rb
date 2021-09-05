@@ -44,6 +44,18 @@ feature 'User can vote for question', "
       expect(page).not_to have_link 'Vote for'
       expect(page).not_to have_link 'Vote against'
     end
+
+    scenario 're-votes' do
+      create(:vote, votable: question, voter: user)
+
+      visit question_path(question)
+
+      click_on 'Re-vote'
+
+      expect(page).to have_content 'Rating: 0'
+      expect(page).to have_link 'Vote for'
+      expect(page).to have_link 'Vote against'
+    end
   end
 
   scenario 'unauthenticated user tries to vote for question' do
