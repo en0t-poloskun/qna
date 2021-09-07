@@ -18,9 +18,7 @@ module Voted
   def destroy_vote
     @votable.votes.find_by(voter: current_user)&.destroy!
 
-    respond_to do |format|
-      format.json { render json: rating }
-    end
+    render json: rating
   end
 
   private
@@ -30,9 +28,7 @@ module Voted
 
     @votable.votes.create!(value: value, voter: current_user)
 
-    respond_to do |format|
-      format.json { render json: rating }
-    end
+    render json: rating
   end
 
   def rating
