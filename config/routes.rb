@@ -8,8 +8,16 @@ Rails.application.routes.draw do
   resources :links, only: :destroy
   resources :rewards, only: :index
 
-  resources :questions, except: :edit do
-    resources :answers, shallow: true, only: %i[create destroy update] do
+  concern :votable do
+    member do
+      post :vote_for
+      post :vote_against
+      delete :destroy_vote
+    end
+  end
+
+  resources :questions, except: :edit, concerns: [:votable] do
+    resources :answers, shallow: true, only: %i[create destroy update], concerns: [:votable] do
       member do
         patch :mark_best
       end

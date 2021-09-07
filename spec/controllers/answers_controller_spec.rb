@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 describe AnswersController, type: :controller do
-  let(:user) { create(:user) }
-  let(:question) { create(:question) }
   let(:answer) { create(:answer, question: question) }
+  let(:question) { create(:question) }
+  let(:user) { create(:user) }
+
+  it_behaves_like 'voted'
 
   describe 'POST #create' do
     before { login(user) }

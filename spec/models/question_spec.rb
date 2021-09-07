@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe Question, type: :model do
+  it_behaves_like 'votable'
+
   it { is_expected.to belong_to(:author).class_name('User') }
 
   it { is_expected.to have_one(:reward).dependent(:destroy) }

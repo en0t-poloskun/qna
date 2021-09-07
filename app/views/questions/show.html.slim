@@ -7,8 +7,11 @@ p= @question.body
 = render 'shared/user_links', resource: @question
 
 - if @question.reward.present?
-  b ="This question gives a reward: #{@question.reward.name}"
+  b= "This question gives a reward: #{@question.reward.name}"
 
+= render 'shared/votes', resource: @question
+
+br
 .answers
   = render @answers
 
