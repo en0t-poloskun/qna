@@ -6,8 +6,11 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :find_question, only: %i[show destroy update]
 
+  after_action :publish_question, only: [:create]
+
   def index
     @questions = Question.all
+    gon.current_user_id = current_user&.id
   end
 
   def show
@@ -54,5 +57,19 @@ class QuestionsController < ApplicationController
   def question_params
     params.require(:question).permit(:title, :body, files: [], links_attributes: %i[name url],
                                                     reward_attributes: %i[name image])
+  end
+
+  def publish_question
+    return if @question.errors.any?
+
+    ActionCable.server.broadcast 'questions_channel',
+                                 { author_id: @question.author.id,
+                                   template: question_template }
+  end
+
+  def question_template
+    ApplicationController.render(partial: 'questions/question_cable',
+                                 locals: { question: @question,
+                                           current_user: current_user })
   end
 end

@@ -4,8 +4,8 @@
       h3= link_to question.title, question_path(question)
       b= "#{question.author.email} asks:"
       p= question.body
-      = render 'shared/files', resource: question
-      = render 'shared/user_links', resource: question
+      = render partial: 'shared/files', locals: { resource: question, current_user: current_user }
+      = render partial: 'shared/user_links', locals: { resource: question, current_user: current_user }
 
       - if current_user&.author_of?(question)
         .action_links
@@ -19,5 +19,5 @@
       .edit-question-errors
         = render 'shared/errors', resource: question
 
-      = render partial: 'edit_form', locals: { question: question }
+      = render partial: 'questions/edit_form', locals: { question: question }
   br
