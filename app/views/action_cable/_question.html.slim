@@ -1,0 +1,9 @@
+.question*{data: { question_id: question.id } }
+  .card
+    .card-body
+      h3= link_to question.title, question_path(question)
+      b= "#{question.author.email} asks:"
+      p= question.body
+      = render 'action_cable/files', resource: question
+      = render 'action_cable/links', resource: question
+  br

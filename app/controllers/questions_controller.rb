@@ -10,13 +10,14 @@ class QuestionsController < ApplicationController
 
   def index
     @questions = Question.all
-    gon.current_user_id = current_user&.id
   end
 
   def show
     @answer = Answer.new
     @answer.links.build
     @answers = @question.answers
+    gon.question_id = @question.id
+    gon.current_user_id = current_user&.id
   end
 
   def new
@@ -62,14 +63,10 @@ class QuestionsController < ApplicationController
   def publish_question
     return if @question.errors.any?
 
-    ActionCable.server.broadcast 'questions_channel',
-                                 { author_id: @question.author.id,
-                                   template: question_template }
+    ActionCable.server.broadcast 'questions_channel', question_template
   end
 
   def question_template
-    ApplicationController.render(partial: 'questions/question_cable',
-                                 locals: { question: @question,
-                                           current_user: current_user })
+    ApplicationController.render(partial: 'action_cable/question', locals: { question: @question })
   end
 end

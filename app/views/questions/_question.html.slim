@@ -8,7 +8,6 @@
       = render 'shared/user_links', resource: question
 
       - if current_user&.author_of?(question)
-        .action_links
           = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
           = ' | '
           = link_to 'Delete',

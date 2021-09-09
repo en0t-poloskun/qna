@@ -1,0 +1,17 @@
+.answer*{data: { answer_id: answer.id } }
+  .card
+    .card-body
+      b= "#{answer.author.email} answers:"
+      p= answer.body
+
+      = render 'action_cable/files', resource: answer
+      = render 'action_cable/links', resource: answer
+
+      .mark_best_link
+        p= link_to 'Mark as best',
+                      mark_best_answer_path(answer),
+                      method: :patch,
+                      remote: true
+      
+      = render 'action_cable/votes', resource: answer
+  br

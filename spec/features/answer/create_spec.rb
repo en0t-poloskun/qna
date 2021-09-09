@@ -66,8 +66,6 @@ feature 'User can create answer', "
       end
 
       Capybara.using_session('user') do
-        click_on 'Ask question'
-
         fill_in 'Body', with: 'text text text'
 
         click_on 'Add'

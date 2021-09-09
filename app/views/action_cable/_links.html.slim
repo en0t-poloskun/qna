@@ -8,13 +8,6 @@
             .col-2
               = link_to link.name, link.url, target: '_blank', rel: 'nofollow'
 
-            - if current_user&.author_of?(resource)
-              .col
-                = link_to 'Delete link',
-                            link_path(link),
-                            method: :delete,
-                            remote: true,
-                            data: { confirm: 'Are you sure?' }
           - if link.gist?
             .card
               pre =link.gist_content
