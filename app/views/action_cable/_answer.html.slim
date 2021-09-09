@@ -14,4 +14,11 @@
                       remote: true
       
       = render 'action_cable/votes', resource: answer
+      
+      br
+      .comments id="comments_answer_#{answer.id}"
+        = render answer.comments
+
+      .comments_form id="comments_form_answer_#{answer.id}"
+          = render 'comments/form', commentable: answer
   br

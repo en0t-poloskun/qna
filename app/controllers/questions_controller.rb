@@ -6,8 +6,6 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
   before_action :find_question, only: %i[show destroy update]
 
-  after_action :publish_question, only: [:create]
-
   def index
     @questions = Question.all
   end
@@ -34,6 +32,7 @@ class QuestionsController < ApplicationController
     else
       render :new
     end
+    publish_question
   end
 
   def update
