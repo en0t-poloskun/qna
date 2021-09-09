@@ -8,12 +8,12 @@
       = render 'shared/user_links', resource: question
 
       - if current_user&.author_of?(question)
-          = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
-          = ' | '
-          = link_to 'Delete',
-                        question_path(question),
-                        method: :delete,
-                        data: { confirm: 'Are you sure?' }
+        = link_to 'Edit', '#', class: 'edit-question-link', data: { question_id: question.id }
+        = ' | '
+        = link_to 'Delete',
+                      question_path(question),
+                      method: :delete,
+                      data: { confirm: 'Are you sure?' }
 
       .edit-question-errors
         = render 'shared/errors', resource: question
