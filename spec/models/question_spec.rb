@@ -2,6 +2,7 @@
 
 describe Question, type: :model do
   it_behaves_like 'votable'
+  it_behaves_like 'commentable'
 
   it { is_expected.to belong_to(:author).class_name('User') }
 

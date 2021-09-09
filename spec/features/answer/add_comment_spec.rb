@@ -17,28 +17,26 @@ feature 'User can comment answer', "
     end
 
     scenario 'adds a comment' do
-      within '.answers > .comment_form' do
+      within '.answers' do
         fill_in 'Comment', with: 'text text text'
-        click_on 'Add'
-      end
+        click_on 'Send'
 
-      within '.answers > .comments' do
         expect(page).to have_content 'text text text'
       end
     end
 
     scenario 'adds a comment with errors' do
-      within '.answers > .comment_form' do
-        click_on 'Add'
-      end
+      within '.answers' do
+        click_on 'Send'
 
-      expect(page).to have_content "Body can't be blank"
+        expect(page).to have_content "Body can't be blank"
+      end
     end
   end
 
   scenario 'unauthenticated user tries to add a comment' do
     visit question_path(question)
 
-    expect(page).not_to have_selector '.comment_form'
+    expect(page).not_to have_selector '.comments_form'
   end
 end

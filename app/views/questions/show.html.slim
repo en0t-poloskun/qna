@@ -12,6 +12,14 @@ p= @question.body
 = render 'shared/votes', resource: @question
 
 br
+.comments id="comments_question_#{@question.id}"
+  = render @question.comments
+
+- if user_signed_in?
+  .comments_form id="comments_form_question_#{@question.id}"
+    = render 'comments/form', commentable: @question
+
+br
 .answers
   = render @answers
 

@@ -1,0 +1,10 @@
+br
+.comment-errors
+  = render 'shared/errors', resource: Comment.new
+= form_with model: [commentable, Comment.new], class: 'form-inline', local: false do |f|
+  = f.label :body, 'Comment'
+  div class="row align-items-end"
+    .col
+      = f.text_area :body, class: 'form-control', rows: '1'
+    .col
+      = f.submit 'Send'
