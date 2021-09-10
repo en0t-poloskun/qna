@@ -44,3 +44,5 @@ RSpec/NestedGroups:
 RSpec/ExampleLength:
   Enabled: true
   Max: 15
+  Exclude: 
+    - spec/features/**/*.rb

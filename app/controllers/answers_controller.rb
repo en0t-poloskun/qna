@@ -11,6 +11,7 @@ class AnswersController < ApplicationController
     @answer = @question.answers.build(answer_params)
     @answer.author = current_user
     @answer.save
+    publish_answer
   end
 
   def update
@@ -35,5 +36,18 @@ class AnswersController < ApplicationController
 
   def answer_params
     params.require(:answer).permit(:body, files: [], links_attributes: %i[name url])
+  end
+
+  def publish_answer
+    return if @answer.errors.any?
+
+    ActionCable.server.broadcast "question_#{@question.id}_answers",
+                                 { author_id: @answer.author.id,
+                                   question_author_id: @question.author.id,
+                                   template: answer_template }
+  end
+
+  def answer_template
+    ApplicationController.render(partial: 'action_cable/answer', locals: { answer: @answer })
   end
 end

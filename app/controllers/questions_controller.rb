@@ -14,6 +14,8 @@ class QuestionsController < ApplicationController
     @answer = Answer.new
     @answer.links.build
     @answers = @question.answers
+    gon.question_id = @question.id
+    gon.current_user_id = current_user&.id
   end
 
   def new
@@ -30,6 +32,7 @@ class QuestionsController < ApplicationController
     else
       render :new
     end
+    publish_question
   end
 
   def update
@@ -54,5 +57,15 @@ class QuestionsController < ApplicationController
   def question_params
     params.require(:question).permit(:title, :body, files: [], links_attributes: %i[name url],
                                                     reward_attributes: %i[name image])
+  end
+
+  def publish_question
+    return if @question.errors.any?
+
+    ActionCable.server.broadcast 'questions_channel', question_template
+  end
+
+  def question_template
+    ApplicationController.render(partial: 'action_cable/question', locals: { question: @question })
   end
 end

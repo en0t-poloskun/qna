@@ -17,10 +17,14 @@ Rails.application.routes.draw do
   end
 
   resources :questions, except: :edit, concerns: [:votable] do
+    resources :comments, only: %i[create], defaults: { commentable: 'questions' }
     resources :answers, shallow: true, only: %i[create destroy update], concerns: [:votable] do
+      resources :comments, only: %i[create], defaults: { commentable: 'answers' }
       member do
         patch :mark_best
       end
     end
   end
+
+  mount ActionCable.server => '/cable'
 end

@@ -32,4 +32,12 @@
         = render 'shared/errors', resource: answer
       
       = render partial: 'answers/edit_form', locals: { answer: answer }
+
+      br
+      .comments id="comments_answer_#{answer.id}"
+        = render answer.comments
+      
+      - if user_signed_in?
+        .comments_form id="comments_form_answer_#{answer.id}"
+          = render 'comments/form', commentable: answer
   br
