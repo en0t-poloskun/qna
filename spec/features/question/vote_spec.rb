@@ -58,7 +58,7 @@ feature 'User can vote for question', "
     end
   end
 
-  scenario 'unauthenticated user tries to vote for question' do
+  scenario 'unauthenticated user tries to vote for question', js: true do
     visit question_path(question)
 
     expect(page).not_to have_link 'Vote for'

@@ -3,6 +3,8 @@
 class CommentsController < ApplicationController
   before_action :authenticate_user!
 
+  authorize_resource
+
   def create
     set_commentable
     @comment = @commentable.comments.build(comment_params)

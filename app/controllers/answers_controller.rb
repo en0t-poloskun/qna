@@ -2,9 +2,10 @@
 
 class AnswersController < ApplicationController
   include Voted
-
   before_action :authenticate_user!
   before_action :find_answer, only: %i[destroy update mark_best]
+
+  authorize_resource
 
   def create
     @question = Question.find(params[:question_id])
@@ -15,17 +16,17 @@ class AnswersController < ApplicationController
   end
 
   def update
-    @answer.update(answer_params) if current_user.author_of?(@answer)
+    @answer.update(answer_params)
     @question = @answer.question
   end
 
   def destroy
-    @answer.destroy if current_user.author_of?(@answer)
+    @answer.destroy
   end
 
   def mark_best
     @question = @answer.question
-    MarkBestService.new(@answer, @question.reward).call if current_user.author_of?(@question)
+    MarkBestService.new(@answer, @question.reward).call
   end
 
   private

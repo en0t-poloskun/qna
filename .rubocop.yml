@@ -11,12 +11,14 @@ Metrics/AbcSize:
   Enabled: true
   Exclude:
     - db/migrate/*
+    - app/models/ability.rb
 
 Metrics/MethodLength:
   Enabled: true
   Max: 13
   Exclude:
     - db/migrate/*
+    - app/models/ability.rb
 
 Metrics/PerceivedComplexity:
   Enabled: true
@@ -46,3 +48,7 @@ RSpec/ExampleLength:
   Max: 15
   Exclude: 
     - spec/features/**/*.rb
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: true
+  Max: 6

@@ -73,10 +73,10 @@ describe AnswersController, type: :controller do
         expect { delete_request }.not_to change(Answer, :count)
       end
 
-      it 'renders destroy template' do
+      it 'riderects to root' do
         delete_request
 
-        expect(response).to render_template :destroy
+        expect(response).to redirect_to root_path
       end
     end
   end
@@ -129,10 +129,10 @@ describe AnswersController, type: :controller do
         expect { patch_update }.not_to change(answer, :body)
       end
 
-      it 'renders update template' do
+      it 'redirects to root' do
         patch_update
 
-        expect(response).to render_template :update
+        expect(response).to redirect_to root_path
       end
     end
   end
@@ -178,10 +178,10 @@ describe AnswersController, type: :controller do
         expect { patch_mark_best }.not_to change(reward, :owner)
       end
 
-      it 'renders mark_best template' do
+      it 'redirects to root' do
         patch_mark_best
 
-        expect(response).to render_template :mark_best
+        expect(response).to redirect_to root_path
       end
     end
   end

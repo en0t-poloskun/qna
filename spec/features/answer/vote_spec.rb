@@ -69,7 +69,7 @@ feature 'User can vote for answer', "
     end
   end
 
-  scenario 'unauthenticated user tries to vote for answer' do
+  scenario 'unauthenticated user tries to vote for answer', js: true do
     visit question_path(question)
 
     within '.answers' do

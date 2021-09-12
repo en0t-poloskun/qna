@@ -8,15 +8,18 @@ module Voted
   end
 
   def vote_for
+    authorize! :vote_for, @votable
     vote(1)
   end
 
   def vote_against
+    authorize! :vote_against, @votable
     vote(-1)
   end
 
   def destroy_vote
-    @votable.votes.find_by(voter: current_user)&.destroy!
+    authorize! :destroy_vote, @votable
+    @votable.votes.find_by(voter: current_user).destroy!
 
     render json: rating
   end
@@ -24,8 +27,6 @@ module Voted
   private
 
   def vote(value)
-    return if current_user.author_of?(@votable) || current_user.voted?(@votable)
-
     @votable.votes.create!(value: value, voter: current_user)
 
     render json: rating

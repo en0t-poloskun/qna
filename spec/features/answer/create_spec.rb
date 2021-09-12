@@ -49,9 +49,8 @@ feature 'User can create answer', "
 
   scenario 'unauthenticated user tries to add an answer' do
     visit question_path(question)
-    click_on 'Add'
 
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    expect(page).not_to have_selector 'form.new-answer'
   end
 
   describe 'mulitple sessions' do

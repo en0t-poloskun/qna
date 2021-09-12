@@ -35,10 +35,10 @@ shared_examples_for 'voted' do
         expect { post_vote_for }.to change(votable.votes, :count).by(0)
       end
 
-      it 'returns status: No Content' do
+      it 'redirects to root' do
         post_vote_for
 
-        expect(response.status).to eq 204
+        expect(response).to redirect_to root_path
       end
     end
 
@@ -49,10 +49,10 @@ shared_examples_for 'voted' do
         expect { post_vote_for }.to change(votable.votes, :count).by(0)
       end
 
-      it 'returns status: No Content' do
+      it 'redirects to root' do
         post_vote_for
 
-        expect(response.status).to eq 204
+        expect(response).to redirect_to root_path
       end
     end
   end
@@ -105,10 +105,10 @@ shared_examples_for 'voted' do
         expect { delete_destroy_vote }.not_to change(Vote, :count)
       end
 
-      it 'renders rating json' do
+      it 'redirects to root' do
         delete_destroy_vote
 
-        expect(response.body).to eq rating_json
+        expect(response).to redirect_to root_path
       end
     end
   end

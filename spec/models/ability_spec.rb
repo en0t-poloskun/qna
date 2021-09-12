@@ -37,7 +37,7 @@ describe Ability, type: :model do
     end
 
     context 'with answers' do
-      let(:own_answer) { create :answer, author: answer }
+      let(:own_answer) { create :answer, author: user }
       let(:other_answer) { create :answer }
 
       it { is_expected.to be_able_to :create, Answer }
@@ -75,9 +75,9 @@ describe Ability, type: :model do
     end
 
     context 'with votes' do
+      before { create :vote, voter: user, votable: voted_question }
+
       let(:voted_question) { create :question }
-      let(:own_vote) { create :vote, voter: user, votable: voted_question }
-      let(:other_vote) { create :vote }
 
       it { is_expected.to be_able_to :vote_for, other_question }
       it { is_expected.not_to be_able_to :vote_for, own_question }
@@ -87,8 +87,8 @@ describe Ability, type: :model do
       it { is_expected.not_to be_able_to :vote_against, own_question }
       it { is_expected.not_to be_able_to :vote_against, voted_question }
 
-      it { is_expected.to be_able_to :destroy_vote, own_vote }
-      it { is_expected.not_to be_able_to :destroy_vote, other_vote }
+      it { is_expected.to be_able_to :destroy_vote, voted_question }
+      it { is_expected.not_to be_able_to :destroy_vote, other_question }
     end
   end
 end
