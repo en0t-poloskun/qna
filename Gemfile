@@ -35,6 +35,7 @@ gem 'bootstrap', '~> 5.0.1'
 gem 'cancancan'
 gem 'cocoon'
 gem 'devise'
+gem 'doorkeeper'
 gem 'gon'
 gem 'octokit', '~> 4.0'
 gem 'rubocop-rspec', require: false
