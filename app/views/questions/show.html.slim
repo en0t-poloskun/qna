@@ -15,7 +15,7 @@ br
 .comments id="comments_question_#{@question.id}"
   = render @question.comments
 
-- if user_signed_in?
+- if can?(:create, Comment)
   .comments_form id="comments_form_question_#{@question.id}"
     = render 'comments/form', commentable: @question
 
@@ -23,8 +23,9 @@ br
 .answers
   = render @answers
 
-h3= 'Add answer'
+- if can?(:create, Answer)
+  h3= 'Add answer'
 
-= render 'answers/form'
+  = render 'answers/form'
 
 = link_to 'Back', questions_path

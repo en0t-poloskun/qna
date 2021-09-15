@@ -32,10 +32,10 @@ describe FilesController, type: :controller do
         expect { delete_request }.not_to change(ActiveStorage::Attachment, :count)
       end
 
-      it 'renders destroy template' do
+      it 'redirects to root' do
         delete_request
 
-        expect(response).to render_template :destroy
+        expect(response).to redirect_to root_path
       end
     end
   end

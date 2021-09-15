@@ -123,10 +123,10 @@ describe QuestionsController, type: :controller do
         expect { delete_request }.not_to change(Question, :count)
       end
 
-      it 'redirects to show' do
+      it 'redirects to root_path' do
         delete_request
 
-        expect(response).to redirect_to question_path(question)
+        expect(response).to redirect_to root_path
       end
     end
   end
@@ -182,9 +182,10 @@ describe QuestionsController, type: :controller do
         expect { patch_update }.not_to change(question, :body)
       end
 
-      it 'renders update view' do
+      it 'redirects to root' do
         patch_update
-        expect(response).to render_template :update
+
+        expect(response).to redirect_to root_path
       end
     end
   end

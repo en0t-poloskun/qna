@@ -2,20 +2,19 @@
   .rating
     b= "Rating: #{resource.rating}"
 
-  - if current_user && !current_user&.author_of?(resource)
-    .vote-actions
-      .vote-links class="#{ 'd-none' if current_user.voted?(resource) }"
-        = link_to 'Vote for',
-                      polymorphic_url(resource, action: :vote_for),
-                      method: :post,
-                      remote: true
-        = ' | '
-        = link_to 'Vote against',
-                      polymorphic_url(resource, action: :vote_against),
-                      method: :post,
-                      remote: true
-      .re-vote-link class="#{ 'd-none' unless current_user.voted?(resource) }"
-        = link_to 'Re-vote',
-                      polymorphic_url(resource, action: :destroy_vote),
-                      method: :delete,
-                      remote: true
+  .vote-actions
+    .vote-links class="#{ 'd-none' if cannot?(:vote_for, resource) && cannot?(:vote_against, resource) }"
+      = link_to 'Vote for',
+                    polymorphic_url(resource, action: :vote_for),
+                    method: :post,
+                    remote: true
+      = ' | '
+      = link_to 'Vote against',
+                    polymorphic_url(resource, action: :vote_against),
+                    method: :post,
+                    remote: true
+    .re-vote-link class="#{ 'd-none' if cannot?(:destroy_vote, resource) }"
+      = link_to 'Re-vote',
+                    polymorphic_url(resource, action: :destroy_vote),
+                    method: :delete,
+                    remote: true
