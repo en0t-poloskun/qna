@@ -30,8 +30,11 @@ Metrics/BlockLength:
     - spec/models/*
     - spec/controllers/**/*.rb
     - spec/features/**/*.rb
+    - spec/api/v1/**/*.rb
     - config/environments/*
     - db/schema.rb
+    - config/routes.rb
+
 
 RSpec/Capybara/FeatureMethods:
   Enabled: false
