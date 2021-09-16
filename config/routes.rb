@@ -33,8 +33,9 @@ Rails.application.routes.draw do
         get :me, on: :collection
       end
 
-      resources :questions, only: %i[index show create update destroy]
-      resources :answers, only: %i[index show]
+      resources :questions, only: %i[index show create update destroy] do
+        resources :answers, shallow: true, only: %i[index show create]
+      end
     end
   end
   mount ActionCable.server => '/cable'

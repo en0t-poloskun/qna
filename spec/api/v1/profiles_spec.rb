@@ -76,7 +76,7 @@ describe 'Profiles API', type: :request do
 
       it 'does not return current user' do
         json['users'].each do |profile|
-          expect(profile['id']).not_to eq me.send('id')
+          expect(profile['id']).not_to eq me.id
         end
       end
 
