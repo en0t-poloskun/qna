@@ -34,6 +34,7 @@ Rails.application.routes.draw do
       end
 
       resources :questions, only: %i[index show]
+      resources :answers, only: %i[index show]
     end
   end
   mount ActionCable.server => '/cable'

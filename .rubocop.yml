@@ -53,5 +53,4 @@ RSpec/ExampleLength:
     - spec/features/**/*.rb
 
 RSpec/MultipleMemoizedHelpers:
-  Enabled: true
-  Max: 6
+  Enabled: false
