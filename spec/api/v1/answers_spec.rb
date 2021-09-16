@@ -6,16 +6,9 @@ describe 'Answers API', type: :request do
   describe 'GET /api/v1/questions/:question_id/answers' do
     let(:question) { create(:question) }
 
-    context 'when unauthorized' do
-      it 'returns 401 status if there is no access_token' do
-        get "/api/v1/questions/#{question.id}/answers", headers: headers
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if access_token is invalid' do
-        get "/api/v1/questions/#{question.id}/answers", params: { access_token: '1234' }, headers: headers
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'API Unauthorizable' do
+      let(:method) { :get }
+      let(:api_path) { "/api/v1/questions/#{question.id}/answers" }
     end
 
     context 'when authorized' do
@@ -24,72 +17,28 @@ describe 'Answers API', type: :request do
         [Rack::Test::UploadedFile.new(Rails.root.join('Gemfile.lock')),
          Rack::Test::UploadedFile.new(Rails.root.join('yarn.lock'))]
       end
-      let!(:answers) { create_list(:answer, 2, files: files, question: question) }
-      let(:answer) { answers.first }
-      let(:answer_json) { json['answers'].first }
-      let!(:comments) { create_list(:comment, 3, commentable: answer) }
-      let!(:links) { create_list(:link, 3, linkable: answer) }
+
+      let!(:resources) { create_list(:answer, 2, files: files, question: question) }
+      let(:resources_json) { json['answers'] }
+      let(:resource) { resources.first }
+      let(:resource_json) { resources_json.first }
+
+      let!(:comments) { create_list(:comment, 3, commentable: resource) }
+      let!(:links) { create_list(:link, 3, linkable: resource) }
 
       before do
         get "/api/v1/questions/#{question.id}/answers", params: { access_token: access_token.token }, headers: headers
       end
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
+      it_behaves_like 'API Indexable' do
+        let(:public_fields) { %w[id body author_id created_at updated_at] }
       end
 
-      it 'returns list of answers' do
-        expect(json['answers'].size).to eq 2
-      end
+      it_behaves_like 'API Comentable'
 
-      it 'returns all public fields' do
-        %w[id body author_id created_at updated_at].each do |attr|
-          expect(answer_json[attr]).to eq answer.send(attr).as_json
-        end
-      end
+      it_behaves_like 'API Linkable'
 
-      describe 'comments' do
-        let(:comment) { comments.first }
-        let(:comment_json) { answer_json['comments'].first }
-
-        it 'returns list of comments' do
-          expect(answer_json['comments'].size).to eq 3
-        end
-
-        it 'returns all public fields' do
-          %w[id body author_id created_at updated_at].each do |attr|
-            expect(comment_json[attr]).to eq comment.send(attr).as_json
-          end
-        end
-      end
-
-      describe 'links' do
-        let(:link) { links.first }
-        let(:link_json) { answer_json['links'].first }
-
-        it 'returns list of links' do
-          expect(answer_json['links'].size).to eq 3
-        end
-
-        it 'returns all public fields' do
-          %w[id name url created_at updated_at].each do |attr|
-            expect(link_json[attr]).to eq link.send(attr).as_json
-          end
-        end
-      end
-
-      describe 'files' do
-        let(:file) { answer.files.first }
-        let(:file_json) { answer_json['files'].first }
-
-        it 'returns list of files' do
-          expect(answer_json['files'].size).to eq 2
-        end
-
-        it 'returns file url' do
-          expect(file_json['url']).to eq url_for(file).delete_prefix('http://www.example.com')
-        end
-      end
+      it_behaves_like 'API Filable'
     end
   end
 
@@ -100,138 +49,52 @@ describe 'Answers API', type: :request do
     end
     let(:answer) { create(:answer, files: files) }
 
-    context 'when unauthorized' do
-      it 'returns 401 status if there is no access_token' do
-        get "/api/v1/answers/#{answer.id}", headers: headers
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if access_token is invalid' do
-        get "/api/v1/answers/#{answer.id}", params: { access_token: '1234' }, headers: headers
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'API Unauthorizable' do
+      let(:method) { :get }
+      let(:api_path) { "/api/v1/answers/#{answer.id}" }
     end
 
     context 'when authorized' do
       let(:access_token) { create(:access_token) }
-      let(:answer_json) { json['answer'] }
+      let(:resource_json) { json['answer'] }
+      let(:resource) { answer }
+
       let!(:comments) { create_list(:comment, 3, commentable: answer) }
       let!(:links) { create_list(:link, 3, linkable: answer) }
 
       before { get "/api/v1/answers/#{answer.id}", params: { access_token: access_token.token }, headers: headers }
 
-      it 'returns 200 status' do
-        expect(response).to be_successful
+      it_behaves_like 'API Showable' do
+        let(:public_fields) { %w[id body author_id created_at updated_at] }
       end
 
-      it 'returns all public fields' do
-        %w[id body author_id created_at updated_at].each do |attr|
-          expect(answer_json[attr]).to eq answer.send(attr).as_json
-        end
-      end
+      it_behaves_like 'API Comentable'
 
-      describe 'comments' do
-        let(:comment) { comments.first }
-        let(:comment_json) { answer_json['comments'].first }
+      it_behaves_like 'API Linkable'
 
-        it 'returns list of comments' do
-          expect(answer_json['comments'].size).to eq 3
-        end
-
-        it 'returns all public fields' do
-          %w[id body author_id created_at updated_at].each do |attr|
-            expect(comment_json[attr]).to eq comment.send(attr).as_json
-          end
-        end
-      end
-
-      describe 'links' do
-        let(:link) { links.first }
-        let(:link_json) { answer_json['links'].first }
-
-        it 'returns list of links' do
-          expect(answer_json['links'].size).to eq 3
-        end
-
-        it 'returns all public fields' do
-          %w[id name url created_at updated_at].each do |attr|
-            expect(link_json[attr]).to eq link.send(attr).as_json
-          end
-        end
-      end
-
-      describe 'files' do
-        let(:file) { answer.files.first }
-        let(:file_json) { answer_json['files'].first }
-
-        it 'returns list of files' do
-          expect(answer_json['files'].size).to eq 2
-        end
-
-        it 'returns file url' do
-          expect(file_json['url']).to eq url_for(file).delete_prefix('http://www.example.com')
-        end
-      end
+      it_behaves_like 'API Filable'
     end
   end
 
   describe 'POST /api/v1/questions/:question_id/answers' do
     let(:question) { create(:question) }
+    let(:api_path) { "/api/v1/questions/#{question.id}/answers" }
 
-    context 'when unauthorized' do
-      it 'returns 401 status if there is no access_token' do
-        post "/api/v1/questions/#{question.id}/answers", headers: headers
-        expect(response.status).to eq 401
-      end
-
-      it 'returns 401 status if access_token is invalid' do
-        post "/api/v1/questions/#{question.id}/answers", params: { access_token: '1234' }, headers: headers
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'API Unauthorizable' do
+      let(:method) { :post }
     end
 
     context 'when authorized' do
       let(:user) { create(:user) }
       let(:access_token) { create(:access_token, resource_owner_id: user.id) }
 
-      let(:post_create) do
-        post "/api/v1/questions/#{question.id}/answers",
-             params: { access_token: access_token.token, answer: answer_params },
-             headers: headers
-      end
-
-      context 'with valid attributes' do
-        let(:answer_params) { attributes_for(:answer) }
-
-        it 'returns 201 status' do
-          post_create
-
-          expect(response).to have_http_status(:created)
+      it_behaves_like 'API Creatable' do
+        let(:post_create) do
+          post api_path, params: { access_token: access_token.token, answer: resource_params }, headers: headers
         end
-
-        it 'saves a new answer in the database' do
-          expect { post_create }.to change(question.answers, :count).by(1)
-        end
-
-        it 'assigned to author' do
-          post_create
-
-          expect(json['answer']['author_id']).to eq user.id
-        end
-      end
-
-      context 'with invalid attributes' do
-        let(:answer_params) { attributes_for(:answer, :invalid) }
-
-        it 'returns 422 status' do
-          post_create
-
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-
-        it 'does not save answer' do
-          expect { post_create }.not_to change(Answer, :count)
-        end
+        let(:resource) { :answer }
+        let(:association) { 'answers' }
+        let(:resource_class) { Answer }
       end
     end
   end
@@ -240,72 +103,20 @@ describe 'Answers API', type: :request do
     let(:user) { create(:user) }
     let(:answer) { create(:answer, author: user) }
 
-    context 'when unauthorized' do
-      it 'returns 401 status if there is no access_token' do
-        patch "/api/v1/answers/#{answer.id}", headers: headers
-        expect(response.status).to eq 401
-      end
+    let(:api_path) { "/api/v1/answers/#{answer.id}" }
 
-      it 'returns 401 status if access_token is invalid' do
-        patch "/api/v1/answers/#{answer.id}", params: { access_token: '1234' }, headers: headers
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'API Unauthorizable' do
+      let(:method) { :patch }
     end
 
     context 'when authorized' do
-      let(:patch_update) do
-        patch "/api/v1/answers/#{answer.id}",
-              params: { access_token: access_token.token, answer: answer_params },
-              headers: headers
-      end
-
-      context 'with valid attributes' do
-        let(:access_token) { create(:access_token, resource_owner_id: user.id) }
-        let(:answer_params) { { body: 'new body' } }
-
-        it 'changes answer attributes' do
-          patch_update
-
-          answer.reload
-
-          expect(answer.body).to eq 'new body'
+      it_behaves_like 'API Updatable' do
+        let(:patch_update) do
+          patch api_path, params: { access_token: access_token.token, answer: resource_params }, headers: headers
         end
-
-        it 'returns 200 status' do
-          patch_update
-
-          expect(response).to be_successful
-        end
-      end
-
-      context 'with invalid attributes' do
-        let(:access_token) { create(:access_token, resource_owner_id: user.id) }
-        let(:answer_params) { attributes_for(:answer, :invalid) }
-
-        it 'does not change answer attributes' do
-          expect { patch_update }.not_to change(answer, :body)
-        end
-
-        it 'returns 422 status' do
-          patch_update
-
-          expect(response).to have_http_status(:unprocessable_entity)
-        end
-      end
-
-      context 'when user is not an author' do
-        let(:access_token) { create(:access_token) }
-        let(:answer_params) { { body: 'new body' } }
-
-        it 'does not change answer attributes' do
-          expect { patch_update }.not_to change(answer, :body)
-        end
-
-        it 'returns 403 status' do
-          patch_update
-
-          expect(response).to have_http_status(:forbidden)
-        end
+        let(:valid_params) { { body: 'new body' } }
+        let(:invalid_params) { attributes_for(:answer, :invalid) }
+        let(:resource) { answer }
       end
     end
   end
@@ -314,49 +125,17 @@ describe 'Answers API', type: :request do
     let(:user) { create(:user) }
     let!(:answer) { create(:answer, author: user) }
 
-    context 'when unauthorized' do
-      it 'returns 401 status if there is no access_token' do
-        delete "/api/v1/answers/#{answer.id}", headers: headers
-        expect(response.status).to eq 401
-      end
+    let(:api_path) { "/api/v1/answers/#{answer.id}" }
 
-      it 'returns 401 status if access_token is invalid' do
-        delete "/api/v1/answers/#{answer.id}", params: { access_token: '1234' }, headers: headers
-        expect(response.status).to eq 401
-      end
+    it_behaves_like 'API Unauthorizable' do
+      let(:method) { :delete }
     end
 
     context 'when authorized' do
-      let(:delete_destroy) do
-        delete "/api/v1/answers/#{answer.id}", params: { access_token: access_token.token }, headers: headers
-      end
-
-      context 'when user is an author' do
-        let(:access_token) { create(:access_token, resource_owner_id: user.id) }
-
-        it 'deletes the answer' do
-          expect { delete_destroy }.to change(user.answers, :count).by(-1)
-        end
-
-        it 'returns 204 status' do
-          delete_destroy
-
-          expect(response).to have_http_status(:no_content)
-        end
-      end
-
-      context 'when user is not an author' do
-        let(:access_token) { create(:access_token) }
-
-        it 'does not delete answer' do
-          expect { delete_destroy }.not_to change(Answer, :count)
-        end
-
-        it 'returns 403 status' do
-          delete_destroy
-
-          expect(response).to have_http_status(:forbidden)
-        end
+      it_behaves_like 'API Deletable' do
+        let(:delete_destroy) { delete api_path, params: { access_token: access_token.token }, headers: headers }
+        let(:association) { 'answers' }
+        let(:resource_class) { Answer }
       end
     end
   end
