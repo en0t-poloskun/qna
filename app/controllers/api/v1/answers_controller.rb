@@ -26,6 +26,19 @@ module Api
         end
       end
 
+      def update
+        if @answer.update(answer_params)
+          render json: @answer
+        else
+          render json: { errors: @answer.errors.full_messages }, status: :unprocessable_entity
+        end
+      end
+
+      def destroy
+        @answer.destroy!
+        head :no_content
+      end
+
       private
 
       def find_question

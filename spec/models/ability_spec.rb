@@ -25,6 +25,7 @@ describe Ability, type: :model do
 
     it { is_expected.not_to be_able_to :manage, :all }
     it { is_expected.to be_able_to :read, :all }
+    it { is_expected.to be_able_to :me, User }
 
     context 'with questions' do
       it { is_expected.to be_able_to :create, Question }

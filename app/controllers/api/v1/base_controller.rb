@@ -7,6 +7,10 @@ module Api
 
       protect_from_forgery with: :null_session
 
+      rescue_from CanCan::AccessDenied do
+        head :forbidden
+      end
+
       private
 
       def current_resource_owner

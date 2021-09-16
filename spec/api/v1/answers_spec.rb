@@ -235,4 +235,129 @@ describe 'Answers API', type: :request do
       end
     end
   end
+
+  describe 'PATCH /api/v1/answers/:id' do
+    let(:user) { create(:user) }
+    let(:answer) { create(:answer, author: user) }
+
+    context 'when unauthorized' do
+      it 'returns 401 status if there is no access_token' do
+        patch "/api/v1/answers/#{answer.id}", headers: headers
+        expect(response.status).to eq 401
+      end
+
+      it 'returns 401 status if access_token is invalid' do
+        patch "/api/v1/answers/#{answer.id}", params: { access_token: '1234' }, headers: headers
+        expect(response.status).to eq 401
+      end
+    end
+
+    context 'when authorized' do
+      let(:patch_update) do
+        patch "/api/v1/answers/#{answer.id}",
+              params: { access_token: access_token.token, answer: answer_params },
+              headers: headers
+      end
+
+      context 'with valid attributes' do
+        let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+        let(:answer_params) { { body: 'new body' } }
+
+        it 'changes answer attributes' do
+          patch_update
+
+          answer.reload
+
+          expect(answer.body).to eq 'new body'
+        end
+
+        it 'returns 200 status' do
+          patch_update
+
+          expect(response).to be_successful
+        end
+      end
+
+      context 'with invalid attributes' do
+        let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+        let(:answer_params) { attributes_for(:answer, :invalid) }
+
+        it 'does not change answer attributes' do
+          expect { patch_update }.not_to change(answer, :body)
+        end
+
+        it 'returns 422 status' do
+          patch_update
+
+          expect(response).to have_http_status(:unprocessable_entity)
+        end
+      end
+
+      context 'when user is not an author' do
+        let(:access_token) { create(:access_token) }
+        let(:answer_params) { { body: 'new body' } }
+
+        it 'does not change answer attributes' do
+          expect { patch_update }.not_to change(answer, :body)
+        end
+
+        it 'returns 403 status' do
+          patch_update
+
+          expect(response).to have_http_status(:forbidden)
+        end
+      end
+    end
+  end
+
+  describe 'DELETE /api/v1/answers/:id' do
+    let(:user) { create(:user) }
+    let!(:answer) { create(:answer, author: user) }
+
+    context 'when unauthorized' do
+      it 'returns 401 status if there is no access_token' do
+        delete "/api/v1/answers/#{answer.id}", headers: headers
+        expect(response.status).to eq 401
+      end
+
+      it 'returns 401 status if access_token is invalid' do
+        delete "/api/v1/answers/#{answer.id}", params: { access_token: '1234' }, headers: headers
+        expect(response.status).to eq 401
+      end
+    end
+
+    context 'when authorized' do
+      let(:delete_destroy) do
+        delete "/api/v1/answers/#{answer.id}", params: { access_token: access_token.token }, headers: headers
+      end
+
+      context 'when user is an author' do
+        let(:access_token) { create(:access_token, resource_owner_id: user.id) }
+
+        it 'deletes the answer' do
+          expect { delete_destroy }.to change(user.answers, :count).by(-1)
+        end
+
+        it 'returns 204 status' do
+          delete_destroy
+
+          expect(response).to have_http_status(:no_content)
+        end
+      end
+
+      context 'when user is not an author' do
+        let(:access_token) { create(:access_token) }
+
+        it 'does not delete answer' do
+          expect { delete_destroy }.not_to change(Answer, :count)
+        end
+
+        it 'returns 403 status' do
+          delete_destroy
+
+          expect(response).to have_http_status(:forbidden)
+        end
+      end
+    end
+  end
 end
