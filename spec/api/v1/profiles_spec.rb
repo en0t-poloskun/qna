@@ -5,18 +5,18 @@ describe 'Profiles API', type: :request do
     { 'CONTENT_TYPE' => 'application/json',
       'ACCEPT' => 'application/json' }
   end
+  let(:api_path) { '/api/v1/profiles/me' }
 
   describe 'GET /api/v1/profiles/me' do
     it_behaves_like 'API Unauthorizable' do
       let(:method) { :get }
-      let(:api_path) { '/api/v1/profiles/me' }
     end
 
     context 'when authorized' do
       let(:me) { create(:user) }
       let(:access_token) { create(:access_token, resource_owner_id: me.id) }
 
-      before { get '/api/v1/profiles/me', params: { access_token: access_token.token }, headers: headers }
+      before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
       it_behaves_like 'API Showable' do
         let(:resource) { me }
@@ -33,9 +33,10 @@ describe 'Profiles API', type: :request do
   end
 
   describe 'GET /api/v1/profiles' do
+    let(:api_path) { '/api/v1/profiles' }
+
     it_behaves_like 'API Unauthorizable' do
       let(:method) { :get }
-      let(:api_path) { '/api/v1/profiles' }
     end
 
     context 'when authorized' do
@@ -44,7 +45,7 @@ describe 'Profiles API', type: :request do
 
       let(:access_token) { create(:access_token, resource_owner_id: me.id) }
 
-      before { get '/api/v1/profiles', params: { access_token: access_token.token }, headers: headers }
+      before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
       it_behaves_like 'API Indexable' do
         let(:resource) { resources.first }

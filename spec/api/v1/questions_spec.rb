@@ -4,9 +4,10 @@ describe 'Questions API', type: :request do
   let(:headers) { { 'ACCEPT' => 'application/json' } }
 
   describe 'GET /api/v1/questions' do
+    let(:api_path) { '/api/v1/questions' }
+
     it_behaves_like 'API Unauthorizable' do
       let(:method) { :get }
-      let(:api_path) { '/api/v1/questions' }
     end
 
     context 'when authorized' do
@@ -23,7 +24,7 @@ describe 'Questions API', type: :request do
       let!(:comments) { create_list(:comment, 3, commentable: resource) }
       let!(:links) { create_list(:link, 3, linkable: resource) }
 
-      before { get '/api/v1/questions', params: { access_token: access_token.token }, headers: headers }
+      before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
       it_behaves_like 'API Indexable' do
         let(:public_fields) { %w[id title body author_id created_at updated_at] }
@@ -43,10 +44,10 @@ describe 'Questions API', type: :request do
        Rack::Test::UploadedFile.new(Rails.root.join('yarn.lock'))]
     end
     let(:question) { create(:question, files: files) }
+    let(:api_path) { "/api/v1/questions/#{question.id}" }
 
     it_behaves_like 'API Unauthorizable' do
       let(:method) { :get }
-      let(:api_path) { "/api/v1/questions/#{question.id}" }
     end
 
     context 'when authorized' do
@@ -57,7 +58,7 @@ describe 'Questions API', type: :request do
       let!(:comments) { create_list(:comment, 3, commentable: question) }
       let!(:links) { create_list(:link, 3, linkable: question) }
 
-      before { get "/api/v1/questions/#{question.id}", params: { access_token: access_token.token }, headers: headers }
+      before { get api_path, params: { access_token: access_token.token }, headers: headers }
 
       it_behaves_like 'API Showable' do
         let(:public_fields) { %w[id title body author_id created_at updated_at] }
