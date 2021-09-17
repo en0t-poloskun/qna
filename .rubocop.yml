@@ -31,6 +31,7 @@ Metrics/BlockLength:
     - spec/controllers/**/*.rb
     - spec/features/**/*.rb
     - spec/api/v1/**/*.rb
+    - spec/support/shared_examples/**/*.rb
     - config/environments/*
     - db/schema.rb
     - config/routes.rb
