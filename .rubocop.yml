@@ -30,8 +30,12 @@ Metrics/BlockLength:
     - spec/models/*
     - spec/controllers/**/*.rb
     - spec/features/**/*.rb
+    - spec/api/v1/**/*.rb
+    - spec/support/shared_examples/**/*.rb
     - config/environments/*
     - db/schema.rb
+    - config/routes.rb
+
 
 RSpec/Capybara/FeatureMethods:
   Enabled: false
@@ -50,5 +54,7 @@ RSpec/ExampleLength:
     - spec/features/**/*.rb
 
 RSpec/MultipleMemoizedHelpers:
-  Enabled: true
-  Max: 6
+  Enabled: false
+
+RSpec/LetSetup:
+  Enabled: false
