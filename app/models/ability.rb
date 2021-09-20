@@ -49,5 +49,9 @@ class Ability
     can :destroy_vote, [Question, Answer] do |votable|
       user.voted?(votable)
     end
+
+    can :subscribe, [Question] do |question|
+      !user.subscribed?(question)
+    end
   end
 end

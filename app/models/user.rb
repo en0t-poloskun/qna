@@ -19,4 +19,8 @@ class User < ApplicationRecord
   def voted?(resource)
     votes.find_by(votable: resource).present?
   end
+
+  def subscribed?(question)
+    subscribed_questions.find_by(id: question.id).present?
+  end
 end

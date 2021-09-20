@@ -42,4 +42,20 @@ describe User, type: :model do
       it { is_expected.not_to be_voted(question) }
     end
   end
+
+  describe '#subscribed?' do
+    subject(:user) { create(:user) }
+
+    context 'when user subscribed' do
+      let(:question) { create(:question, author: user) }
+
+      it { is_expected.to be_subscribed(question) }
+    end
+
+    context 'when user has not voted' do
+      let(:question) { create(:question) }
+
+      it { is_expected.not_to be_subscribed(question) }
+    end
+  end
 end

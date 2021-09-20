@@ -10,6 +10,7 @@ p= @question.body
   b= "This question gives a reward: #{@question.reward.name}"
 
 = render 'shared/votes', resource: @question
+= render 'shared/subscriptions', question: @question
 
 br
 .comments id="comments_question_#{@question.id}"
