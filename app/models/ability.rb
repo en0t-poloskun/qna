@@ -53,5 +53,7 @@ class Ability
     can :subscribe, [Question] do |question|
       !user.subscribed?(question)
     end
+
+    can :destroy, [Subscription], user_id: user.id
   end
 end

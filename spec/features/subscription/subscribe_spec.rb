@@ -19,7 +19,7 @@ feature 'User can subscribe to question', "
       click_on 'Subscribe'
 
       expect(page).not_to have_link 'Subscribe'
-      # expect(page).to heve_link 'Unsubscribe'
+      expect(page).to have_link 'Unsubscribe'
     end
 
     scenario 'tries to subscribe twice' do

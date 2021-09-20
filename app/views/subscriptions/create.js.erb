@@ -1,1 +1,2 @@
-$('.subscription-actions').replaceWith('<%= j render 'shared/subscriptions', question: @question %>');
+$('.subscription-actions')
+      .replaceWith('<%= j render 'shared/subscriptions', question: @question, subscription: @subscription %>');

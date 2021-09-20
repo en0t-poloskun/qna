@@ -7,6 +7,13 @@ class SubscriptionsController < ApplicationController
     @question = Question.find(params[:question_id])
     authorize! :subscribe, @question
 
-    @question.subscribers.push(current_user)
+    @subscription = @question.subscriptions.create(user: current_user)
+  end
+
+  def destroy
+    @subscription = Subscription.find(params[:id])
+    authorize! :destroy, @subscription
+
+    @subscription.destroy
   end
 end

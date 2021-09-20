@@ -58,3 +58,6 @@ RSpec/MultipleMemoizedHelpers:
 
 RSpec/LetSetup:
   Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false

@@ -44,4 +44,38 @@ describe SubscriptionsController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #destroy' do
+    before { login(user) }
+
+    context 'when user subscribed' do
+      let!(:subscription) { create(:subscription, user: user) }
+      let(:delete_request) { delete :destroy, params: { id: subscription }, format: :js }
+
+      it 'deletes subscription' do
+        expect { delete_request }.to change(Subscription, :count).by(-1)
+      end
+
+      it 'renders destroy template' do
+        delete_request
+
+        expect(response).to render_template :destroy
+      end
+    end
+
+    context 'when user not subscribed' do
+      let!(:subscription) { create(:subscription) }
+      let(:delete_request) { delete :destroy, params: { id: subscription }, format: :js }
+
+      it 'does not delete subscription' do
+        expect { delete_request }.not_to change(Subscription, :count)
+      end
+
+      it 'riderects to root' do
+        delete_request
+
+        expect(response).to redirect_to root_path
+      end
+    end
+  end
 end

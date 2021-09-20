@@ -2,5 +2,7 @@
 
 FactoryBot.define do
   factory :subscription do
+    user { build(:user) }
+    question { build(:question) }
   end
 end
