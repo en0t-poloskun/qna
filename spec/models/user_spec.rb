@@ -7,6 +7,8 @@ describe User, type: :model do
     it { is_expected.to have_many(:comments).dependent(:destroy) }
     it { is_expected.to have_many(:rewards).dependent(:nullify) }
     it { is_expected.to have_many(:votes).dependent(:destroy) }
+    it { is_expected.to have_many(:subscriptions) }
+    it { is_expected.to have_many(:subscribed_questions).through(:subscriptions).source(:question).dependent(:destroy) }
   end
 
   describe '#author_of?' do
