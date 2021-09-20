@@ -16,6 +16,7 @@ class QuestionsController < ApplicationController
     @answer = Answer.new
     @answer.links.build
     @answers = @question.answers
+    @subscription = find_subscription
     gon.question_id = @question.id
     gon.current_user_id = current_user&.id
   end
@@ -47,6 +48,12 @@ class QuestionsController < ApplicationController
   end
 
   private
+
+  def find_subscription
+    return unless current_user
+
+    @question.subscriptions.find_by(user_id: current_user.id)
+  end
 
   def find_question
     @question = Question.with_attached_files.find(params[:id])

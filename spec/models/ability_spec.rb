@@ -91,5 +91,18 @@ describe Ability, type: :model do
       it { is_expected.to be_able_to :destroy_vote, voted_question }
       it { is_expected.not_to be_able_to :destroy_vote, other_question }
     end
+
+    context 'with subscriptions' do
+      let(:question) { create(:question) }
+      let(:subscribed_question) { own_question }
+      let(:own_subscription) { create(:subscription, user: user) }
+      let(:other_subscription) { create(:subscription) }
+
+      it { is_expected.to be_able_to :subscribe, question }
+      it { is_expected.not_to be_able_to :subscribe, subscribed_question }
+
+      it { is_expected.to be_able_to :destroy, own_subscription }
+      it { is_expected.not_to be_able_to :destroy, other_subscription }
+    end
   end
 end

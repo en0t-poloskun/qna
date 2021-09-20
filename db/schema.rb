@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_210_915_095_942) do
+ActiveRecord::Schema.define(version: 20_210_920_111_039) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
 
@@ -138,6 +138,15 @@ ActiveRecord::Schema.define(version: 20_210_915_095_942) do
     t.index ['question_id'], name: 'index_rewards_on_question_id'
   end
 
+  create_table 'subscriptions', force: :cascade do |t|
+    t.bigint 'user_id', null: false
+    t.bigint 'question_id', null: false
+    t.datetime 'created_at', precision: 6, null: false
+    t.datetime 'updated_at', precision: 6, null: false
+    t.index ['question_id'], name: 'index_subscriptions_on_question_id'
+    t.index ['user_id'], name: 'index_subscriptions_on_user_id'
+  end
+
   create_table 'users', force: :cascade do |t|
     t.string 'email', default: '', null: false
     t.string 'encrypted_password', default: '', null: false
@@ -173,5 +182,7 @@ ActiveRecord::Schema.define(version: 20_210_915_095_942) do
   add_foreign_key 'oauth_access_tokens', 'oauth_applications', column: 'application_id'
   add_foreign_key 'questions', 'users', column: 'author_id'
   add_foreign_key 'rewards', 'questions'
+  add_foreign_key 'subscriptions', 'questions'
+  add_foreign_key 'subscriptions', 'users'
   add_foreign_key 'votes', 'users', column: 'voter_id'
 end

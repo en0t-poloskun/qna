@@ -10,6 +10,8 @@ describe Question, type: :model do
 
   it { is_expected.to have_many(:answers).dependent(:destroy) }
   it { is_expected.to have_many(:links).dependent(:destroy) }
+  it { is_expected.to have_many(:subscriptions) }
+  it { is_expected.to have_many(:subscribers).through(:subscriptions).source(:user).dependent(:destroy) }
 
   it { is_expected.to validate_presence_of :title }
   it { is_expected.to validate_presence_of :body }
@@ -59,6 +61,18 @@ describe Question, type: :model do
         question.change_best(new_best_answer)
         expect(new_best_answer.best).to eq true
       end
+    end
+  end
+
+  describe '.created_yesterday' do
+    it 'includes questions created yesterday' do
+      question = create(:question, created_at: Date.yesterday)
+      expect(described_class.created_yesterday).to include(question)
+    end
+
+    it 'excludes questions not created yesterday' do
+      question = create(:question)
+      expect(described_class.created_yesterday).not_to include(question)
     end
   end
 end

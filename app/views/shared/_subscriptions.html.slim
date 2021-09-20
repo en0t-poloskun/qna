@@ -1,0 +1,10 @@
+.subscription-actions
+  - if can?(:subscribe, question)
+    = link_to 'Subscribe', question_subscriptions_path(question), method: :post, remote: true
+  - if can?(:destroy, subscription)
+    = link_to 'Unsubscribe',
+                      subscription_path(subscription),
+                      method: :delete,
+                      remote: true,
+                      data: { confirm: 'Are you sure?' }
+

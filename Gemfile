@@ -41,7 +41,10 @@ gem 'gon'
 gem 'octokit', '~> 4.0'
 gem 'oj'
 gem 'rubocop-rspec', require: false
+gem 'sidekiq'
+gem 'sinatra', require: false
 gem 'slim-rails'
+gem 'whenever', require: false
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

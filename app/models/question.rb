@@ -10,6 +10,8 @@ class Question < ApplicationRecord
 
   has_many :answers, dependent: :destroy
   has_many :links, dependent: :destroy, as: :linkable
+  has_many :subscriptions
+  has_many :subscribers, through: :subscriptions, source: :user, dependent: :destroy
 
   has_many_attached :files
 
@@ -18,6 +20,10 @@ class Question < ApplicationRecord
 
   validates :title, presence: true
   validates :body, presence: true
+
+  after_create :subscribe_author
+
+  scope :created_yesterday, -> { where(created_at: Date.yesterday.midnight..Date.yesterday.end_of_day) }
 
   def best_answer
     answers.find_by(best: true)
@@ -28,5 +34,11 @@ class Question < ApplicationRecord
       best_answer&.update!(best: false)
       answer.update!(best: true)
     end
+  end
+
+  private
+
+  def subscribe_author
+    subscribers.push(author)
   end
 end
