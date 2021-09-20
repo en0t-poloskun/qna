@@ -61,4 +61,16 @@ describe Question, type: :model do
       end
     end
   end
+
+  describe '.created_yesterday' do
+    it 'includes questions created yesterday' do
+      question = create(:question, created_at: Date.yesterday)
+      expect(described_class.created_yesterday).to include(question)
+    end
+
+    it 'excludes questions not created yesterday' do
+      question = create(:question)
+      expect(described_class.created_yesterday).not_to include(question)
+    end
+  end
 end
